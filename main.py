@@ -5,21 +5,23 @@
 VERSION = 0.2
 
 import pygame, sys
+import math
 from pygame.locals import *
 
 
 # Snake luokka joka perii Sprite luokan
 class Snake(pygame.sprite.Sprite):
-    x = 0
-    y = 200
-    pos = (x, y)
+    snake = [(20, 20), (19, 20), (18, 20), (17, 20), (15, 20)]
     direction = "left"
 
+    # Käärmeen pää
+    x, y = snake[0]
+
     def __init__(self):
-        self.x = 0
         self.image = pygame.image.load('blocksnake.png')
 
-    def update(self):
+    def update(self, gridSize):
+
         if self.direction == "right":
             self.x += 1
 
@@ -32,7 +34,9 @@ class Snake(pygame.sprite.Sprite):
         if self.direction == "down":
             self.y += 1
 
-        self.pos = (self.x, self.y)
+        self.snake[0] = (self.x, self.y)
+        rect = pygame.Rect(self.x * gridSize, self.y * gridSize, gridSize, gridSize)
+        pygame.draw.rect(pygame.display.get_surface(), (255, 0, 0), rect, 0)
 
     def moveUp(self):
         self.direction = "up"
@@ -51,6 +55,7 @@ class Game:
     windowHeight = 800
     screenResolution = (windowWidth, windowHeight)
     clock = pygame.time.Clock()
+    snake = 0
 
     # Pythonissa luokan konstruktori on __init__.
     # Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
@@ -59,16 +64,14 @@ class Game:
     # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
     def __init__(self):
         self.running = True
-        self.snake = Snake()
 
     def game_loop(self):
         # Peli looppi
-        self.display_screen.fill((0, 0, 0))
         while self.running:
-            # Varmistetaan että peli ei mene yli 60 fps:n
-            self.clock.tick(60)
+            # Varmistetaan että peli ei mene yli 10 fps:n (kärmes lentäisi valonnopeudella muuten...)
+            self.clock.tick(10)
             self.drawGrid()
-            self.snake.update()
+            self.snake.update(self.gridSize)
             # Tapahtuma looppi
             for event in pygame.event.get():
                 # Kaksi ensimmäistä if lausetta käsittelevät pelistä poistumisen
@@ -106,6 +109,8 @@ class Game:
 
         # Määritellään näytön ominaisuuksia kuten resoluutio...
         self.display_screen = pygame.display.set_mode(self.screenResolution)
+        self.gridSize = 20
+        self.snake = Snake()
         icon = pygame.image.load('icon.png')
         pygame.display.set_caption("Kärmespeli")
         pygame.display.set_icon(icon)
@@ -115,12 +120,21 @@ class Game:
 
     # drawGrid() -metodi piirtää Kärmespeliin ruudukon
     def drawGrid(self):
-        gridSize = 20
-        for i in range(self.windowWidth):
-            for j in range(self.windowHeight):
-                rect = pygame.Rect(i*gridSize, j*gridSize, gridSize, gridSize)
-                pygame.draw.rect(self.display_screen, (255, 255, 255), rect, 1)
-
+        for i in range(math.floor(self.windowWidth / (self.gridSize))):
+            for j in range(math.floor(self.windowHeight / (self.gridSize))):
+                rect = pygame.Rect(i*self.gridSize, j*self.gridSize, self.gridSize, self.gridSize)
+                # Piirretään ruudukko. If else lauseilla tarkistetaan minkä värinen
+                # ruutu tulee olemaan.
+                if i % 2 == 0:
+                    if j % 2 == 0:
+                        pygame.draw.rect(self.display_screen, (0, 255, 0), rect, 0)
+                    else:
+                        pygame.draw.rect(self.display_screen, (0, 230, 0), rect, 0)
+                else:
+                    if j % 2 == 0:
+                        pygame.draw.rect(self.display_screen, (0, 230, 0), rect, 0)
+                    else:
+                        pygame.draw.rect(self.display_screen, (0, 255, 0), rect, 0)
 
 if __name__ == "__main__":
     App = Game()
