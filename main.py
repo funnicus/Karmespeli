@@ -12,11 +12,12 @@ from pygame.locals import *
 # Snake luokka joka perii Sprite luokan
 class Snake(pygame.sprite.Sprite):
     snake = [(20, 20), (19, 20), (18, 20), (17, 20), (16, 20)]
-    direction = "left"
+    direction = "right"
 
     def __init__(self):
         self.image = pygame.image.load('blocksnake.png')
 
+    # update() metodilla liikutamme käärmettä
     def update(self, gridSize):
 
         if self.direction == "right":
@@ -51,23 +52,27 @@ class Snake(pygame.sprite.Sprite):
                 newSnake.append(self.snake[i-1])
             self.snake = newSnake
 
-        # Pään koordinaatit
+        # Käärmeen piirtäminen
         for i in range(len(self.snake)):
             x, y = self.snake[i]
             rect = pygame.Rect(x * gridSize, y * gridSize, gridSize, gridSize)
             pygame.draw.rect(pygame.display.get_surface(), (255, 0, 0), rect, 0)
 
     def moveUp(self):
-        self.direction = "up"
+        if self.direction != "down":
+            self.direction = "up"
 
     def moveRight(self):
-        self.direction = "right"
+        if self.direction != "left":
+            self.direction = "right"
 
     def moveDown(self):
-        self.direction = "down"
+        if self.direction != "up":
+            self.direction = "down"
 
     def moveLeft(self):
-        self.direction = "left"
+        if self.direction != "right":
+            self.direction = "left"
 
 
 class Game:
@@ -88,15 +93,18 @@ class Game:
     def game_loop(self):
         # Peli looppi
         while self.running:
-            # Varmistetaan että peli ei mene yli 10 fps:n (kärmes lentäisi valonnopeudella muuten...)
+            # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
             self.clock.tick(10)
             self.drawGrid()
             self.snake.update(self.gridSize)
             # Tapahtuma looppi
             for event in pygame.event.get():
-                # Kaksi ensimmäistä if lausetta käsittelevät pelistä poistumisen
+                # Ensimmäinen if lause käsittelee pelistä poistumisen
                 if event.type == QUIT:
                     self.running = False
+                    pygame.quit()
+                    sys.exit(0)
+
                 elif event.type == KEYDOWN:
 
                     if event.key == K_ESCAPE:
