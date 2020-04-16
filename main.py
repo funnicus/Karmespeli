@@ -34,6 +34,7 @@ class Snake(pygame.sprite.Sprite):
         if self.direction == "down":
             self.y += 1
 
+        # Pään koordinaatit
         self.snake[0] = (self.x, self.y)
         rect = pygame.Rect(self.x * gridSize, self.y * gridSize, gridSize, gridSize)
         pygame.draw.rect(pygame.display.get_surface(), (255, 0, 0), rect, 0)
