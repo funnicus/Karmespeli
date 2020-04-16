@@ -11,11 +11,8 @@ from pygame.locals import *
 
 # Snake luokka joka perii Sprite luokan
 class Snake(pygame.sprite.Sprite):
-    snake = [(20, 20), (19, 20), (18, 20), (17, 20), (15, 20)]
+    snake = [(20, 20), (19, 20), (18, 20), (17, 20), (16, 20)]
     direction = "left"
-
-    # Käärmeen pää
-    x, y = snake[0]
 
     def __init__(self):
         self.image = pygame.image.load('blocksnake.png')
@@ -23,21 +20,42 @@ class Snake(pygame.sprite.Sprite):
     def update(self, gridSize):
 
         if self.direction == "right":
-            self.x += 1
+            newSnake = []
+            x, y = self.snake[0]
+            newSnake.append((x+1, y))
+            for i in range(1, len(self.snake)):
+                newSnake.append(self.snake[i-1])
+            self.snake = newSnake
 
         if self.direction == "left":
-            self.x -= 1
+            newSnake = []
+            x, y = self.snake[0]
+            newSnake.append((x-1, y))
+            for i in range(1, len(self.snake)):
+                newSnake.append(self.snake[i-1])
+            self.snake = newSnake
 
         if self.direction == "up":
-            self.y -= 1
+            newSnake = []
+            x, y = self.snake[0]
+            newSnake.append((x, y-1))
+            for i in range(1, len(self.snake)):
+                newSnake.append(self.snake[i-1])
+            self.snake = newSnake
 
         if self.direction == "down":
-            self.y += 1
+            newSnake = []
+            x, y = self.snake[0]
+            newSnake.append((x, y+1))
+            for i in range(1, len(self.snake)):
+                newSnake.append(self.snake[i-1])
+            self.snake = newSnake
 
         # Pään koordinaatit
-        self.snake[0] = (self.x, self.y)
-        rect = pygame.Rect(self.x * gridSize, self.y * gridSize, gridSize, gridSize)
-        pygame.draw.rect(pygame.display.get_surface(), (255, 0, 0), rect, 0)
+        for i in range(len(self.snake)):
+            x, y = self.snake[i]
+            rect = pygame.Rect(x * gridSize, y * gridSize, gridSize, gridSize)
+            pygame.draw.rect(pygame.display.get_surface(), (255, 0, 0), rect, 0)
 
     def moveUp(self):
         self.direction = "up"
@@ -50,6 +68,7 @@ class Snake(pygame.sprite.Sprite):
 
     def moveLeft(self):
         self.direction = "left"
+
 
 class Game:
     windowWidth = 800
