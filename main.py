@@ -1,6 +1,7 @@
 # Kärmespeli
 # Soveltava projekti 2020
 # Johanna Seulu, Juhana Kuparinen, Juho Ollila
+from typing import Tuple
 
 VERSION = 0.3
 
@@ -129,6 +130,73 @@ class Apple:
     def appleLocation(self):
         return self.location
 
+
+def text_object(text, font, colour):
+    textSurface = font.render(text, True, colour)
+    return textSurface, textSurface.get_rect()
+
+class Menu:
+    menuWidth = 800
+    menuHeight = 600
+    menuResolution = (menuWidth, menuHeight)
+    clock = pygame.time.Clock()
+    display_screen = pygame.display.set_mode(menuResolution)
+
+    def __init__(self):
+        self.running = True
+
+    def button(self, msg, x, y, w, h, ic, ac, action=None):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+
+        #Näppäimen luominen
+        if x + w > mouse[0] > x and y + h > mouse[1] > y:
+            pygame.draw.rect(self.display_screen, ac, (x, y, w, h))
+
+            if click[0] == 1 and action != None:
+                if action == "play":
+                    Peli = Game()
+                    Peli.start_game()
+                elif action == "quit":
+                    pygame.quit()
+                    quit()
+
+        else:
+            pygame.draw.rect(self.display_screen, ic, (x, y, w, h))
+
+        #Teksti
+        textCont = pygame.font.Font('OpenSans-Regular.ttf', 40)
+        textSurf, textRect = text_object(msg, textCont, (10, 10, 10))
+        textRect.center = ((self.menuWidth / 2), y+35)
+        self.display_screen.blit(textSurf, textRect)
+
+
+    #Aloitus valikko pelille
+    def main_menu(self):
+        pygame.init()
+        menu = True
+
+        while menu:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    quit()
+
+            #Main menu otsikko ja tausta
+            self.display_screen.fill((10,10,10))
+            textCont = pygame.font.Font('OpenSans-Bold.ttf', 100)
+            textSurf, textRect = text_object("KÄRMESPELI", textCont, (255,255,255))
+            textRect.center = ((self.menuWidth/2), (self.menuHeight/3))
+            self.display_screen.blit(textSurf, textRect)
+
+            #Nappien luonti
+            self.button("ALOITA PELI!", 160, 300, 500, 75, (150, 185, 150), (150, 255, 150), "play")
+            self.button("SULJE PELI!", 160, 400, 500, 75, (185, 150, 150), (255, 150, 150), "quit")
+
+            pygame.display.update()
+            self.clock.tick(15)
+
+
 class Game:
     windowWidth = 800
     windowHeight = 600
@@ -143,7 +211,6 @@ class Game:
     # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
     def __init__(self):
         self.running = True
-
     def game_loop(self):
         # Peli looppi
         self.apple.newApple(self.gridSize)
@@ -197,10 +264,12 @@ class Game:
         self.gridSize = 20
         self.snake = Snake()
         self.apple = Apple(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
+
         # ja title sekä ikoni...
         icon = pygame.image.load('icon.png')
         pygame.display.set_caption("Kärmespeli")
         pygame.display.set_icon(icon)
+
 
         # Käynnistetään itse peli...
         self.game_loop()
@@ -223,7 +292,8 @@ class Game:
                     else:
                         pygame.draw.rect(self.display_screen, (0, 255, 0), rect, 0)
 
+
 if __name__ == "__main__":
-    App = Game()
-    App.start_game()
+    menu = Menu()
+    menu.main_menu()
 
