@@ -2,25 +2,37 @@
 # Soveltava projekti 2020
 # Johanna Seulu, Juhana Kuparinen, Juho Ollila
 
-VERSION = 0.2
+VERSION = 0.3
 
 import pygame, sys
 import math
+import random
+from enum import Enum
 from pygame.locals import *
-
 
 # Snake luokka joka perii Sprite luokan
 class Snake(pygame.sprite.Sprite):
     snake = [(20, 20), (19, 20), (18, 20), (17, 20), (16, 20)]
-    direction = "right"
+    snakeHead = snake[0]
+
+    # Luodaan enum luokka, joka määrittelee käärmeen suunnat
+    class Directions(Enum):
+        Stop = 0
+        Right = 1
+        Left = 2
+        Up = 3
+        Down = 4
+
+    direction = Directions.Right
 
     def __init__(self):
         self.image = pygame.image.load('blocksnake.png')
 
-    # update() metodilla liikutamme käärmettä
+    # update() metodilla liikutamme käärmettä.
     def update(self, gridSize):
+        print(self.snake[0])
 
-        if self.direction == "right":
+        if self.direction == self.Directions.Right:
             newSnake = []
             x, y = self.snake[0]
             newSnake.append((x+1, y))
@@ -28,7 +40,7 @@ class Snake(pygame.sprite.Sprite):
                 newSnake.append(self.snake[i-1])
             self.snake = newSnake
 
-        if self.direction == "left":
+        if self.direction == self.Directions.Left:
             newSnake = []
             x, y = self.snake[0]
             newSnake.append((x-1, y))
@@ -36,7 +48,7 @@ class Snake(pygame.sprite.Sprite):
                 newSnake.append(self.snake[i-1])
             self.snake = newSnake
 
-        if self.direction == "up":
+        if self.direction == self.Directions.Up:
             newSnake = []
             x, y = self.snake[0]
             newSnake.append((x, y-1))
@@ -44,7 +56,7 @@ class Snake(pygame.sprite.Sprite):
                 newSnake.append(self.snake[i-1])
             self.snake = newSnake
 
-        if self.direction == "down":
+        if self.direction == self.Directions.Down:
             newSnake = []
             x, y = self.snake[0]
             newSnake.append((x, y+1))
@@ -52,32 +64,70 @@ class Snake(pygame.sprite.Sprite):
                 newSnake.append(self.snake[i-1])
             self.snake = newSnake
 
+        # Päivitetään pään sijainti
+        self.snakeHead = self.snake[0]
         # Käärmeen piirtäminen
         for i in range(len(self.snake)):
             x, y = self.snake[i]
             rect = pygame.Rect(x * gridSize, y * gridSize, gridSize, gridSize)
             pygame.draw.rect(pygame.display.get_surface(), (255, 0, 0), rect, 0)
 
-    def moveUp(self):
-        if self.direction != "down":
-            self.direction = "up"
-
+    # Metodit, joilla vaihdetaan käärmeen suuntaa.
     def moveRight(self):
-        if self.direction != "left":
-            self.direction = "right"
-
-    def moveDown(self):
-        if self.direction != "up":
-            self.direction = "down"
+        if self.direction != self.Directions.Left:
+            self.direction = self.Directions.Right
 
     def moveLeft(self):
-        if self.direction != "right":
-            self.direction = "left"
+        if self.direction != self.Directions.Right:
+            self.direction = self.Directions.Left
 
+    def moveUp(self):
+        if self.direction != self.Directions.Down:
+            self.direction = self.Directions.Up
+
+    def moveDown(self):
+        if self.direction != self.Directions.Up:
+            self.direction = self.Directions.Down
+
+    def snakeLocation(self):
+        return self.snake[0]
+
+    def growSnake(self):
+        x, y = self.snake[len(self.snake)-1]
+        if self.direction != 2:
+            self.snake.append((x-1, y))
+        else:
+            self.snake.append((x+1, y))
+
+    def isOnScreen(self, width, height):
+        x, y = self.snake[0]
+        if x > width or y > height or x < 0 or y < 0:
+            return False
+        return True
+
+class Apple:
+
+    def __init__(self, width, height):
+        self.height = height
+        self.width = width
+
+    def newApple(self, gridSize):
+        self.x = random.randint(0, self.width-1)
+        self.y = random.randint(0, self.height-1)
+        self.location = (self.x, self.y)
+        self.apple = pygame.Rect(self.x * gridSize, self.y * gridSize, gridSize, gridSize)
+        print("Hello from apple!")
+        print(self.x, self.y)
+
+    def drawApple(self):
+        pygame.draw.rect(pygame.display.get_surface(), (200, 0, 0), self.apple, 0)
+
+    def appleLocation(self):
+        return self.location
 
 class Game:
     windowWidth = 800
-    windowHeight = 800
+    windowHeight = 600
     screenResolution = (windowWidth, windowHeight)
     clock = pygame.time.Clock()
     snake = 0
@@ -92,18 +142,18 @@ class Game:
 
     def game_loop(self):
         # Peli looppi
+        self.apple.newApple(self.gridSize)
         while self.running:
             # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
             self.clock.tick(10)
             self.drawGrid()
+            self.apple.drawApple()
             self.snake.update(self.gridSize)
             # Tapahtuma looppi
             for event in pygame.event.get():
                 # Ensimmäinen if lause käsittelee pelistä poistumisen
                 if event.type == QUIT:
                     self.running = False
-                    pygame.quit()
-                    sys.exit(0)
 
                 elif event.type == KEYDOWN:
 
@@ -122,16 +172,19 @@ class Game:
                     if event.key == K_DOWN:
                         self.snake.moveDown()
 
-            # blit() metodilla piirretään näytölle
-            #self.display_screen.blit(self.background, (0, 0))
-            #self.display_screen.blit(self.snake.image, self.snake.pos)
-            # Metodia flip kutsutaan jotta näyttö päivittyy
-            # pygame.display.flip()
+            # Metodia update() kutsutaan, jotta näyttö päivittyy...
+            if not self.snake.isOnScreen(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize):
+                self.running = False
+
+            if self.snake.snakeLocation() == self.apple.appleLocation():
+                self.apple.newApple(self.gridSize)
+                self.snake.growSnake()
+
             pygame.display.update()
 
     # Funktio jolla aloitetaan peli
     def start_game(self):
-        # pygame.init() -metodia täytyy kutsua, jotta pelimootroi
+        # pygame.init() -metodia täytyy kutsua, jotta pelimoottori
         # käynnistyy.
         pygame.init()
 
@@ -139,6 +192,8 @@ class Game:
         self.display_screen = pygame.display.set_mode(self.screenResolution)
         self.gridSize = 20
         self.snake = Snake()
+        self.apple = Apple(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
+        # ja title sekä ikoni...
         icon = pygame.image.load('icon.png')
         pygame.display.set_caption("Kärmespeli")
         pygame.display.set_icon(icon)
@@ -167,3 +222,4 @@ class Game:
 if __name__ == "__main__":
     App = Game()
     App.start_game()
+
