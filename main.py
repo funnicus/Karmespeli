@@ -70,7 +70,11 @@ class Snake(pygame.sprite.Sprite):
         for i in range(len(self.snake)):
             x, y = self.snake[i]
             rect = pygame.Rect(x * gridSize, y * gridSize, gridSize, gridSize)
-            pygame.draw.rect(pygame.display.get_surface(), (255, 0, 0), rect, 0)
+            # Gradientti kärmes
+            if 255-(i*2) > 0:
+                pygame.draw.rect(pygame.display.get_surface(), (255-(i*2), 0, 0), rect, 0)
+            else:
+                pygame.draw.rect(pygame.display.get_surface(), (0, 0, 0), rect, 0)
 
     # Metodit, joilla vaihdetaan käärmeen suuntaa.
     def moveRight(self):
