@@ -191,7 +191,7 @@ class Menu:
                     Peli.start_game(1200, 900)
                 elif action == "hard":
                     Peli = Game()
-                    Peli.start_game(1920, 1080)
+                    Peli.start_game(1600, 1200)
 
 
         else:
