@@ -152,8 +152,8 @@ class Menu:
     light_red = (255, 150, 150)
     gray = (150, 150, 150)
     light_gray = (200, 200, 200)
-    yellow = (255, 255, 102)
-    light_yellow = (255,255,204)
+    light_yellow = (255, 255, 102)
+    yellow = (255,255,204)
 
     def __init__(self):
         self.running = True
@@ -174,6 +174,7 @@ class Menu:
             pygame.draw.rect(self.menu_screen, ac, (x, y, width, height))
 
             if click[0] == 1 and action != None:
+                #Päävalikon toiminnot
                 if action == "play":
                     self.level_select()
                 elif action == "quit":
@@ -181,6 +182,7 @@ class Menu:
                     quit()
                 elif action == "credits":
                     self.credits()
+                #Tason valintavalikon toiminnot
                 elif action == "easy":
                     Peli = Game()
                     Peli.start_game(800, 600)
@@ -266,6 +268,12 @@ class Menu:
 
     #Tason valinta valikko
     def level_select(self):
+        pygame.quit()
+        pygame.init()
+        self.menuWidth = 800
+        self.menuHeight = 600
+        self.menuResolution = (self.menuWidth, self.menuHeight)
+        self.menu_screen = pygame.display.set_mode(self.menuResolution)
         level = True
         while level:
             for event in pygame.event.get():
@@ -273,9 +281,9 @@ class Menu:
                     pygame.quit()
                     quit()
             self.menu_screen.fill(self.black)
-            self.button("HELPPO", 160, 400, 500, 75, self.green, self.light_green, "easy")
+            self.button("HELPPO", 160, 200, 500, 75, self.green, self.light_green, "easy")
             self.button("NORMAALI", 160, 300, 500, 75, self.yellow, self.light_yellow, "normal")
-            self.button("VAIKEA", 160, 200, 500, 75, self.red, self.light_red, "hard")
+            self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard")
             pygame.display.update()
             self.clock.tick(15)
 
