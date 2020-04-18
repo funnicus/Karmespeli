@@ -106,7 +106,7 @@ class Snake(pygame.sprite.Sprite):
 
     def isOnScreen(self, width, height):
         x, y = self.snake[0]
-        if x > width or y > height or x < 0 or y < 0:
+        if x > width or y > height or x < 0 or y < 4:
             return False
         return True
 
@@ -124,7 +124,7 @@ class Apple:
 
     def newApple(self, gridSize):
         self.x = random.randint(0, self.width-1)
-        self.y = random.randint(0, self.height-1)
+        self.y = random.randint(4, self.height-1)
         self.location = (self.x, self.y)
         self.apple = pygame.Rect(self.x * gridSize, self.y * gridSize, gridSize, gridSize)
         print("Hello from apple!")
@@ -260,6 +260,7 @@ class Game:
         while self.running:
             # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
             self.clock.tick(10)
+            self.display_screen.fill((10, 10, 10))
             self.drawGrid()
             self.apple.drawApple()
             self.snake.update(self.gridSize)
@@ -285,6 +286,12 @@ class Game:
 
                     if event.key == K_DOWN:
                         self.snake.moveDown()
+
+            scoreText = "Score: " + str(self.score)
+            textCont = pygame.font.Font('OpenSans-Regular.ttf', 20)
+            textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
+            textRect.center = (math.floor((self.windowWidth / 2)), 20)
+            self.display_screen.blit(textSurf, textRect)
 
             if not self.snake.isOnScreen(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)\
                     or self.snake.collideWithSelf():
@@ -324,7 +331,7 @@ class Game:
     # drawGrid() -metodi piirtää Kärmespeliin ruudukon
     def drawGrid(self):
         for i in range(math.floor(self.windowWidth / (self.gridSize))):
-            for j in range(math.floor(self.windowHeight / (self.gridSize))):
+            for j in range(4, math.floor(self.windowHeight / (self.gridSize))):
                 rect = pygame.Rect(i*self.gridSize, j*self.gridSize, self.gridSize, self.gridSize)
                 # Piirretään ruudukko. If else lauseilla tarkistetaan minkä värinen
                 # ruutu tulee olemaan.
@@ -339,6 +346,9 @@ class Game:
                     else:
                         pygame.draw.rect(self.display_screen, (0, 255, 0), rect, 0)
 
+    def text_object(self, text, font, colour):
+        textSurface = font.render(text, True, colour)
+        return textSurface, textSurface.get_rect()
 
 if __name__ == "__main__":
     menu = Menu()
