@@ -110,6 +110,12 @@ class Snake(pygame.sprite.Sprite):
             return False
         return True
 
+    def collideWithSelf(self):
+        for i in range(1, len(self.snake)):
+            if self.snake[0] == self.snake[i]:
+                return True
+        return False
+
 class Apple:
 
     def __init__(self, width, height):
@@ -167,7 +173,7 @@ class Menu:
         #Teksti
         textCont = pygame.font.Font('OpenSans-Regular.ttf', 40)
         textSurf, textRect = text_object(msg, textCont, (10, 10, 10))
-        textRect.center = ((self.menuWidth / 2), y+35)
+        textRect.center = (math.floor((self.menuWidth / 2)), y+35)
         self.display_screen.blit(textSurf, textRect)
 
 
@@ -186,7 +192,7 @@ class Menu:
             self.display_screen.fill((10,10,10))
             textCont = pygame.font.Font('OpenSans-Bold.ttf', 100)
             textSurf, textRect = text_object("KÄRMESPELI", textCont, (255,255,255))
-            textRect.center = ((self.menuWidth/2), (self.menuHeight/3))
+            textRect.center = (math.floor((self.menuWidth/2)), math.floor((self.menuHeight/3)))
             self.display_screen.blit(textSurf, textRect)
 
             #Nappien luonti
@@ -203,6 +209,7 @@ class Game:
     screenResolution = (windowWidth, windowHeight)
     clock = pygame.time.Clock()
     snake = 0
+    score = 0
 
     # Pythonissa luokan konstruktori on __init__.
     # Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
@@ -211,6 +218,7 @@ class Game:
     # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
     def __init__(self):
         self.running = True
+
     def game_loop(self):
         # Peli looppi
         self.apple.newApple(self.gridSize)
@@ -243,15 +251,19 @@ class Game:
                     if event.key == K_DOWN:
                         self.snake.moveDown()
 
-            # Metodia update() kutsutaan, jotta näyttö päivittyy...
-            if not self.snake.isOnScreen(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize):
+            if not self.snake.isOnScreen(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)\
+                    or self.snake.collideWithSelf():
                 self.running = False
 
             if self.snake.snakeLocation() == self.apple.appleLocation():
                 self.apple.newApple(self.gridSize)
                 self.snake.growSnake()
+                self.score += 1
 
+            # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
+
+        print("Your score was: " + str(self.score))
 
     # Funktio jolla aloitetaan peli
     def start_game(self):
