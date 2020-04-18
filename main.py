@@ -31,8 +31,7 @@ class Snake(pygame.sprite.Sprite):
 
     # update() metodilla liikutamme käärmettä.
     def update(self, gridSize):
-        print(self.snake[0])
-
+        print(self.direction)
         if self.direction == self.Directions.Right:
             newSnake = []
             x, y = self.snake[0]
@@ -127,8 +126,6 @@ class Apple:
         self.y = random.randint(4, self.height-1)
         self.location = (self.x, self.y)
         self.apple = pygame.Rect(self.x * gridSize, self.y * gridSize, gridSize, gridSize)
-        print("Hello from apple!")
-        print(self.x, self.y)
 
     def drawApple(self):
         pygame.draw.rect(pygame.display.get_surface(), (200, 0, 0), self.apple, 0)
@@ -170,9 +167,6 @@ class Menu:
                     quit()
                 elif action == "credits":
                     self.credits()
-
-
-
         else:
             pygame.draw.rect(self.display_screen, ic, (x, y, w, h))
 
@@ -253,6 +247,8 @@ class Game:
     # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
     def __init__(self):
         self.running = True
+        self.last = pygame.time.get_ticks()
+        self.cooldown = 100
 
     def game_loop(self):
         # Peli looppi
@@ -271,20 +267,25 @@ class Game:
                     self.running = False
 
                 elif event.type == KEYDOWN:
-
+                    now = pygame.time.get_ticks()
                     if event.key == K_ESCAPE:
                         self.running = False
 
-                    if event.key == K_RIGHT:
+                    # Cooldowneilla estetään nappien spämmäys
+                    if event.key == K_RIGHT and now - self.last >= self.cooldown:
+                        self.last = now
                         self.snake.moveRight()
 
-                    if event.key == K_LEFT:
+                    if event.key == K_LEFT and now - self.last >= self.cooldown:
+                        self.last = now
                         self.snake.moveLeft()
 
-                    if event.key == K_UP:
+                    if event.key == K_UP and now - self.last >= self.cooldown:
+                        self.last = now
                         self.snake.moveUp()
 
-                    if event.key == K_DOWN:
+                    if event.key == K_DOWN and now - self.last >= self.cooldown:
+                        self.last = now
                         self.snake.moveDown()
 
             scoreText = "Score: " + str(self.score)
