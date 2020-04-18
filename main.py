@@ -176,7 +176,6 @@ class Menu:
         textRect.center = (math.floor((self.menuWidth / 2)), y+35)
         self.display_screen.blit(textSurf, textRect)
 
-
     #Aloitus valikko pelille
     def main_menu(self):
         pygame.init()
