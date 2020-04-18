@@ -137,9 +137,7 @@ class Apple:
         return self.location
 
 
-def text_object(text, font, colour):
-    textSurface = font.render(text, True, colour)
-    return textSurface, textSurface.get_rect()
+
 
 class Menu:
     menuWidth = 800
@@ -150,6 +148,10 @@ class Menu:
 
     def __init__(self):
         self.running = True
+
+    def text_object(self, text, font, colour):
+        textSurface = font.render(text, True, colour)
+        return textSurface, textSurface.get_rect()
 
     def button(self, msg, x, y, w, h, ic, ac, action=None):
         mouse = pygame.mouse.get_pos()
@@ -166,13 +168,17 @@ class Menu:
                 elif action == "quit":
                     pygame.quit()
                     quit()
+                elif action == "credits":
+                    self.credits()
+
+
 
         else:
             pygame.draw.rect(self.display_screen, ic, (x, y, w, h))
 
         #Teksti
         textCont = pygame.font.Font('OpenSans-Regular.ttf', 40)
-        textSurf, textRect = text_object(msg, textCont, (10, 10, 10))
+        textSurf, textRect = self.text_object(msg, textCont, (10, 10, 10))
         textRect.center = (math.floor((self.menuWidth / 2)), y+35)
         self.display_screen.blit(textSurf, textRect)
 
@@ -190,16 +196,46 @@ class Menu:
             #Main menu otsikko ja tausta
             self.display_screen.fill((10,10,10))
             textCont = pygame.font.Font('OpenSans-Bold.ttf', 100)
-            textSurf, textRect = text_object("KÄRMESPELI", textCont, (255,255,255))
-            textRect.center = (math.floor((self.menuWidth/2)), math.floor((self.menuHeight/3)))
+            textSurf, textRect = self.text_object("KÄRMESPELI", textCont, (255,255,255))
+            textRect.center = (math.floor((self.menuWidth/2)), 100)
             self.display_screen.blit(textSurf, textRect)
 
             #Nappien luonti
-            self.button("ALOITA PELI!", 160, 300, 500, 75, (150, 185, 150), (150, 255, 150), "play")
+            self.button("ALOITA PELI!", 160, 200, 500, 75, (150, 185, 150), (150, 255, 150), "play")
             self.button("SULJE PELI!", 160, 400, 500, 75, (185, 150, 150), (255, 150, 150), "quit")
+            self.button("TEKIJÄT", 160, 300, 500, 75, (150, 150, 150), (200, 200, 200), "credits")
 
             pygame.display.update()
             self.clock.tick(15)
+
+    def credits(self):
+
+        credits = True
+        while credits:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    quit()
+
+            self.display_screen.fill((10, 10, 10))
+            textCont = pygame.font.Font('OpenSans-Regular.ttf', 50)
+            textSurf, textRect = self.text_object("Juhana Kuparinen", textCont, (240, 240, 240))
+            textRect.center = (400, 200)
+            self.display_screen.blit(textSurf, textRect)
+
+            textCont = pygame.font.Font('OpenSans-Regular.ttf', 50)
+            textSurf, textRect = self.text_object("Juho Ollila", textCont, (240, 240, 240))
+            textRect.center = (400, 300)
+            self.display_screen.blit(textSurf, textRect)
+
+            textCont = pygame.font.Font('OpenSans-Regular.ttf', 50)
+            textSurf, textRect = self.text_object("Johanna Seulu", textCont, (240, 240, 240))
+            textRect.center = (400, 400)
+            self.display_screen.blit(textSurf, textRect)
+
+            pygame.display.update()
+            pygame.time.wait(5000)
+            self.main_menu()
 
 
 class Game:
