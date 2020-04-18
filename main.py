@@ -3,7 +3,7 @@
 # Johanna Seulu, Juhana Kuparinen, Juho Ollila
 from typing import Tuple
 
-VERSION = 0.4
+VERSION = 0.5
 
 import pygame, sys
 import math
