@@ -140,11 +140,12 @@ class Apple:
 
 
 class Menu:
+
     menuWidth = 800
     menuHeight = 600
     menuResolution = (menuWidth, menuHeight)
     clock = pygame.time.Clock()
-    display_screen = pygame.display.set_mode(menuResolution)
+    menu_screen = pygame.display.set_mode(menuResolution)
 
     black = (10, 10, 10)
     white = (255, 255, 255)
@@ -154,6 +155,8 @@ class Menu:
     light_red = (255, 150, 150)
     gray = (150, 150, 150)
     light_gray = (200, 200, 200)
+    yellow = (255, 255, 102)
+    light_yellow = (255,255,204)
 
     def __init__(self):
         self.running = True
@@ -162,40 +165,57 @@ class Menu:
         textSurface = font.render(text, True, colour)
         return textSurface, textSurface.get_rect()
 
-    def button(self, msg, x, y, w, h, ic, ac, action=None):
+    #ic = inactive colour eli väri joka on käytössä kun hiiri ei ole napin päällä
+    #ac = active colour eli väri joka tulee käyttöön kun hiirellä mennään napin päälle
+    def button(self, message, x, y, width, height, ic, ac, action=None):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
         #Näppäimen luominen
-        if x + w > mouse[0] > x and y + h > mouse[1] > y:
-            pygame.draw.rect(self.display_screen, ac, (x, y, w, h))
+        if x + width > mouse[0] > x and y + height > mouse[1] > y:
+            pygame.draw.rect(self.menu_screen, ac, (x, y, width, height))
 
             if click[0] == 1 and action != None:
                 if action == "play":
-                    Peli = Game()
-                    Peli.start_game()
+                    self.level_select()
                 elif action == "quit":
                     pygame.quit()
                     quit()
                 elif action == "credits":
                     self.credits()
-
+                elif action == "easy":
+                    Peli = Game()
+                    Peli.start_game(800, 600)
+                elif action == "normal":
+                    Peli = Game()
+                    Peli.start_game(1200, 900)
+                elif action == "hard":
+                    Peli = Game()
+                    Peli.start_game(1920, 1080)
 
 
         else:
-            pygame.draw.rect(self.display_screen, ic, (x, y, w, h))
+            pygame.draw.rect(self.menu_screen, ic, (x, y, width, height))
 
         #Teksti
         textCont = pygame.font.Font('OpenSans-Regular.ttf', 40)
-        textSurf, textRect = self.text_object(msg, textCont, self.black)
+        textSurf, textRect = self.text_object(message, textCont, self.black)
         textRect.center = (math.floor((self.menuWidth / 2)), y+35)
-        self.display_screen.blit(textSurf, textRect)
+        self.menu_screen.blit(textSurf, textRect)
 
     #Aloitus valikko pelille
     def main_menu(self):
+
+
+        self.menuWidth = 800
+        self.menuHeight = 600
+        self.menuResolution = (self.menuWidth, self.menuHeight)
+        self.menu_screen = pygame.display.set_mode(self.menuResolution)
+
         pygame.init()
         menu = True
 
+        #Valikko looppi
         while menu:
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -203,11 +223,11 @@ class Menu:
                     quit()
 
             #Main menu otsikko ja tausta
-            self.display_screen.fill(self.black)
+            self.menu_screen.fill(self.black)
             textCont = pygame.font.Font('OpenSans-Bold.ttf', 100)
             textSurf, textRect = self.text_object("KÄRMESPELI", textCont, self.white)
             textRect.center = (math.floor((self.menuWidth/2)), 100)
-            self.display_screen.blit(textSurf, textRect)
+            self.menu_screen.blit(textSurf, textRect)
 
             #Nappien luonti
             self.button("ALOITA PELI!", 160, 200, 500, 75, self.green, self.light_green, "play")
@@ -227,21 +247,21 @@ class Menu:
                     pygame.quit()
                     quit()
 
-            self.display_screen.fill((10, 10, 10))
+            self.menu_screen.fill((10, 10, 10))
             textCont = pygame.font.Font('OpenSans-Regular.ttf', 50)
             textSurf, textRect = self.text_object("Juhana Kuparinen", textCont, self.white)
             textRect.center = (400, 200)
-            self.display_screen.blit(textSurf, textRect)
+            self.menu_screen.blit(textSurf, textRect)
 
             textCont = pygame.font.Font('OpenSans-Regular.ttf', 50)
             textSurf, textRect = self.text_object("Juho Ollila", textCont, self.white)
             textRect.center = (400, 300)
-            self.display_screen.blit(textSurf, textRect)
+            self.menu_screen.blit(textSurf, textRect)
 
             textCont = pygame.font.Font('OpenSans-Regular.ttf', 50)
             textSurf, textRect = self.text_object("Johanna Seulu", textCont, self.white)
             textRect.center = (400, 400)
-            self.display_screen.blit(textSurf, textRect)
+            self.menu_screen.blit(textSurf, textRect)
 
             pygame.display.update()
             pygame.time.wait(5000)
@@ -255,9 +275,12 @@ class Menu:
                 if event.type == QUIT:
                     pygame.quit()
                     quit()
-
-            self.button("ALOITA PELI!", 160, 200, 500, 75, (150, 185, 150), (150, 255, 150), "easy")
-
+            self.menu_screen.fill(self.black)
+            self.button("HELPPO", 160, 400, 500, 75, self.green, self.light_green, "easy")
+            self.button("NORMAALI", 160, 300, 500, 75, self.yellow, self.light_yellow, "normal")
+            self.button("VAIKEA", 160, 200, 500, 75, self.red, self.light_red, "hard")
+            pygame.display.update()
+            self.clock.tick(15)
 
 
 class Game:
@@ -290,12 +313,15 @@ class Game:
             for event in pygame.event.get():
                 # Ensimmäinen if lause käsittelee pelistä poistumisen
                 if event.type == QUIT:
-                    self.running = False
+                    pygame.quit()
+                    quit()
+
 
                 elif event.type == KEYDOWN:
 
                     if event.key == K_ESCAPE:
-                        self.running = False
+                        menu = Menu()
+                        menu.main_menu()
 
                     if event.key == K_RIGHT:
                         self.snake.moveRight()
@@ -317,7 +343,8 @@ class Game:
 
             if not self.snake.isOnScreen(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)\
                     or self.snake.collideWithSelf():
-                self.running = False
+                menu = Menu()
+                menu.main_menu()
 
             if self.snake.snakeLocation() == self.apple.appleLocation():
                 self.apple.newApple(self.gridSize)
@@ -330,10 +357,15 @@ class Game:
         print("Your score was: " + str(self.score))
 
     # Funktio jolla aloitetaan peli
-    def start_game(self):
+    def start_game(self, width, height):
         # pygame.init() -metodia täytyy kutsua, jotta pelimoottori
         # käynnistyy.
         pygame.init()
+
+        self.windowWidth = width
+        self.windowHeight = height
+
+        self.screenResolution = (self.windowWidth, self.windowHeight)
 
         # Määritellään näytön ominaisuuksia kuten resoluutio...
         self.display_screen = pygame.display.set_mode(self.screenResolution)
