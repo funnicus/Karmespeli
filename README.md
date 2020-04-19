@@ -15,7 +15,7 @@ Se on yksinkertainen matopeli, joka on luotu pythonin __pygame__ -pelikirjastoll
 * Äänet
 * Grafiikkaa (Uusi ikoni, itse piirretty kärmes, esteet ja omenat)
 * Muuta hienosäätöä
-    *Game over -ruutu
+    * Game over -ruutu
     * Peli voisi olla pysähdyksissä hieman ennen kuin se alkaa
     (tämä olisi tärkeää varsinkin Hardmodella)
     * Nappien responsiivisuus tuntuu vielä välillä hieman jähmeältä
