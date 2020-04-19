@@ -13,6 +13,7 @@ luokat olisi hyvä tehdä omiin moduuleihinsa (eli omaan .py tiedostoon) game_mo
 from game_modules.game_engine import Menu
 
 def main():
+    print("Running on version: " + str(VERSION))
     menu = Menu()
     menu.main_menu()
 
