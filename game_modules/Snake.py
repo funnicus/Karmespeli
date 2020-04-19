@@ -1,12 +1,10 @@
-import pygame, sys
+import pygame
 import math
 import random
 from enum import Enum
 
 # Snake luokka joka perii Sprite luokan
 class Snake(pygame.sprite.Sprite):
-    snake = [(20, 20), (19, 20), (18, 20), (17, 20), (16, 20)]
-    snakeHead = snake[0]
 
     # Luodaan enum luokka, joka määrittelee käärmeen suunnat
     class Directions(Enum):
@@ -18,12 +16,21 @@ class Snake(pygame.sprite.Sprite):
 
     direction = Directions.Right
 
-    def __init__(self):
+    def __init__(self, width, height):
         self.image = pygame.image.load('blocksnake.png')
+        self.gridWidth = width
+        self.gridHeight = height
+        self.snake = [
+                    ((self.gridWidth/2), (self.gridWidth/2)),
+                    ((self.gridWidth/2)-1, (self.gridWidth/2)),
+                    ((self.gridWidth/2)-2, (self.gridWidth/2)),
+                    ((self.gridWidth/2)-3, (self.gridWidth/2)),
+                    ((self.gridWidth/2)-4, (self.gridWidth/2))
+                      ]
+        self.snakeHead = self.snake[0]
 
     # update() metodilla liikutamme käärmettä.
     def update(self, gridSize):
-        print(self.direction)
         if self.direction == self.Directions.Right:
             newSnake = []
             x, y = self.snake[0]

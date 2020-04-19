@@ -1,12 +1,21 @@
 import pygame, sys
 import math
 import random
+from enum import Enum
 from typing import Tuple
 from pygame.locals import *
 from game_modules.Snake import Snake
 from game_modules.Apple import Apple
+from game_modules.Obstacle import Obstacle
 
 class Menu:
+
+    # Kun peli käynnistetään, tällä enum -luokalla tiedetään
+    # mikä vaikeustaso on.
+    class Gamemodes(Enum):
+        Easy = 0
+        Normal = 1
+        Hard = 2
 
     menuWidth = 800
     menuHeight = 600
@@ -23,7 +32,7 @@ class Menu:
     gray = (150, 150, 150)
     light_gray = (200, 200, 200)
     light_yellow = (255, 255, 102)
-    yellow = (255,255,204)
+    yellow = (255, 255, 204)
 
     def __init__(self):
         self.running = True
@@ -54,14 +63,14 @@ class Menu:
                     self.credits()
                 #Tason valintavalikon toiminnot
                 elif action == "easy":
-                    Peli = Game()
-                    Peli.start_game(800, 600)
+                    Peli = Game(self.Gamemodes.Easy)
+                    Peli.start_game(400, 400)
                 elif action == "normal":
-                    Peli = Game()
-                    Peli.start_game(1200, 900)
+                    Peli = Game(self.Gamemodes.Normal)
+                    Peli.start_game(600, 600)
                 elif action == "hard":
-                    Peli = Game()
-                    Peli.start_game(1600, 1200)
+                    Peli = Game(self.Gamemodes.Hard)
+                    Peli.start_game(800, 600)
 
 
         else:
@@ -174,20 +183,34 @@ class Game:
     # olioon itseensä viittaavan muuttujan nimi (Javan this -avainsana).
     # Pythonissa on tapana nimittää tätä muuttujaa nimellä self,
     # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
-    def __init__(self):
+    def __init__(self, gamemode):
         self.running = True
         self.last = pygame.time.get_ticks()
         self.cooldown = 100
+        self.gamemode = gamemode
+        self.obstacles = []
 
     def game_loop(self):
         # Peli looppi
         self.apple.newApple(self.gridSize)
+        # Jos vaikeustaso on "Hard", generoidaan esteitä
+        if(self.gamemode.name == "Hard"):
+            for i in range(10):
+                self.obstacles.append(Obstacle(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize))
+                self.obstacles[i].newObstacle(self.gridSize)
+
         while self.running:
             # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
             self.clock.tick(10)
             self.display_screen.fill((10, 10, 10))
             self.drawGrid()
             self.apple.drawApple()
+
+            for i in range(len(self.obstacles)):
+                self.obstacles[i].drawObstacle()
+                if self.obstacles[i].obstacleLocation() == self.apple.appleLocation():
+                    self.apple.newApple(self.gridSize)
+
             self.snake.update(self.gridSize)
             # Tapahtuma looppi
             for event in pygame.event.get():
@@ -195,7 +218,6 @@ class Game:
                 if event.type == QUIT:
                     pygame.quit()
                     quit()
-
 
                 elif event.type == KEYDOWN:
                     now = pygame.time.get_ticks()
@@ -220,12 +242,14 @@ class Game:
                         self.last = now
                         self.snake.moveDown()
 
-            scoreText = "Score: " + str(self.score)
+            # Pisteiden näyttäminen ruudulla
+            scoreText = "Pisteet: " + str(self.score)
             textCont = pygame.font.Font('OpenSans-Regular.ttf', 20)
             textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
             textRect.center = (math.floor((self.windowWidth / 2)), 20)
             self.display_screen.blit(textSurf, textRect)
 
+            # Törmäysten tunnistus
             if not self.snake.isOnScreen(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)\
                     or self.snake.collideWithSelf():
                 menu = Menu()
@@ -235,6 +259,12 @@ class Game:
                 self.apple.newApple(self.gridSize)
                 self.snake.growSnake()
                 self.score += 1
+
+            for i in range(len(self.obstacles)):
+
+                if self.obstacles[i].obstacleLocation() == self.snake.snakeLocation():
+                    menu = Menu()
+                    menu.main_menu()
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
@@ -255,7 +285,7 @@ class Game:
         # Määritellään näytön ominaisuuksia kuten resoluutio...
         self.display_screen = pygame.display.set_mode(self.screenResolution)
         self.gridSize = 20
-        self.snake = Snake()
+        self.snake = Snake(self.windowWidth/self.gridSize, self.windowHeight/self.gridSize)
         self.apple = Apple(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
 
         # ja title sekä ikoni...

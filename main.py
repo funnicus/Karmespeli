@@ -2,7 +2,7 @@
 # Soveltava projekti 2020
 # Johanna Seulu, Juhana Kuparinen, Juho Ollila
 
-VERSION = 0.6
+VERSION = 0.7
 
 '''
 Versiosta 0.6 eteenpäin, kaikki käyttämämme luokat sijaitsevat game_modules -kansiossa omissa moduuleissaan
@@ -13,7 +13,8 @@ luokat olisi hyvä tehdä omiin moduuleihinsa (eli omaan .py tiedostoon) game_mo
 from game_modules.game_engine import Menu
 
 def main():
-    print("Running on version: " + str(VERSION))
+    print("Tervetuloa Kärmespeliin!")
+    print("Pelaatte versiolla: " + str(VERSION))
     menu = Menu()
     menu.main_menu()
 
