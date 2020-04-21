@@ -250,7 +250,7 @@ class Game:
             self.display_screen.blit(textSurf, textRect)
 
             # Törmäysten tunnistus
-            if not self.snake.isOnScreen(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)\
+            if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize))\
                     or self.snake.collideWithSelf():
                 menu = Menu()
                 menu.main_menu()

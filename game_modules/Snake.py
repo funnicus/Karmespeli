@@ -21,11 +21,11 @@ class Snake(pygame.sprite.Sprite):
         self.gridWidth = width
         self.gridHeight = height
         self.snake = [
-                    ((self.gridWidth/2), (self.gridWidth/2)),
-                    ((self.gridWidth/2)-1, (self.gridWidth/2)),
-                    ((self.gridWidth/2)-2, (self.gridWidth/2)),
-                    ((self.gridWidth/2)-3, (self.gridWidth/2)),
-                    ((self.gridWidth/2)-4, (self.gridWidth/2))
+                    (int(self.gridWidth/2), int(self.gridWidth/2)),
+                    (int(self.gridWidth/2)-1, int(self.gridWidth/2)),
+                    (int(self.gridWidth/2)-2, int(self.gridWidth/2)),
+                    (int(self.gridWidth/2)-3, int(self.gridWidth/2)),
+                    (int(self.gridWidth/2)-4, int(self.gridWidth/2))
                       ]
         self.snakeHead = self.snake[0]
 
@@ -104,7 +104,7 @@ class Snake(pygame.sprite.Sprite):
 
     def isOnScreen(self, width, height):
         x, y = self.snake[0]
-        if x > width or y > height or x < 0 or y < 4:
+        if x >= width or y >= height or x < 0 or y < 4:
             return False
         return True
 
