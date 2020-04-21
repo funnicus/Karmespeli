@@ -8,8 +8,8 @@ from game_modules.Snake import Snake
 from game_modules.Apple import Apple
 from game_modules.Obstacle import Obstacle
 
-class Menu:
 
+class Menu:
     # Kun peli käynnistetään, tällä enum -luokalla tiedetään
     # mikä vaikeustaso on.
     class Gamemodes(Enum):
@@ -41,19 +41,19 @@ class Menu:
         textSurface = font.render(text, True, colour)
         return textSurface, textSurface.get_rect()
 
-    #ic = inactive colour eli väri joka on käytössä kun hiiri ei ole napin päällä
-    #ac = active colour eli väri joka tulee käyttöön kun hiirellä mennään napin päälle
+    # ic = inactive colour eli väri joka on käytössä kun hiiri ei ole napin päällä
+    # ac = active colour eli väri joka tulee käyttöön kun hiirellä mennään napin päälle
     def button(self, message, x, y, width, height, ic, ac, action=None):
 
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
-        #Näppäimen luominen
+        # Näppäimen luominen
         if x + width > mouse[0] > x and y + height > mouse[1] > y:
             pygame.draw.rect(self.menu_screen, ac, (x, y, width, height))
 
             if click[0] == 1 and action != None:
-                #Päävalikon toiminnot
+                # Päävalikon toiminnot
                 if action == "play":
                     self.level_select()
                 elif action == "quit":
@@ -61,7 +61,7 @@ class Menu:
                     quit()
                 elif action == "credits":
                     self.credits()
-                #Tason valintavalikon toiminnot
+                # Tason valintavalikon toiminnot
                 elif action == "easy":
                     Peli = Game(self.Gamemodes.Easy)
                     Peli.start_game(400, 400)
@@ -76,13 +76,13 @@ class Menu:
         else:
             pygame.draw.rect(self.menu_screen, ic, (x, y, width, height))
 
-        #Teksti
+        # Teksti
         textCont = pygame.font.Font('OpenSans-Regular.ttf', 40)
         textSurf, textRect = self.text_object(message, textCont, self.black)
-        textRect.center = (math.floor((self.menuWidth / 2)), y+35)
+        textRect.center = (math.floor((self.menuWidth / 2)), y + 35)
         self.menu_screen.blit(textSurf, textRect)
 
-    #Aloitus valikko pelille
+    # Aloitus valikko pelille
     def main_menu(self):
 
         self.menuWidth = 800
@@ -93,21 +93,21 @@ class Menu:
         pygame.init()
         menu = True
 
-        #Valikko looppi
+        # Valikko looppi
         while menu:
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     quit()
 
-            #Main menu otsikko ja tausta
+            # Main menu otsikko ja tausta
             self.menu_screen.fill(self.black)
             textCont = pygame.font.Font('OpenSans-Bold.ttf', 100)
             textSurf, textRect = self.text_object("KÄRMESPELI", textCont, self.white)
-            textRect.center = (math.floor((self.menuWidth/2)), 100)
+            textRect.center = (math.floor((self.menuWidth / 2)), 100)
             self.menu_screen.blit(textSurf, textRect)
 
-            #Nappien luonti
+            # Nappien luonti
             self.button("ALOITA PELI!", 160, 200, 500, 75, self.green, self.light_green, "play")
             self.button("SULJE PELI!", 160, 400, 500, 75, self.red, self.light_red, "quit")
             self.button("TEKIJÄT", 160, 300, 500, 75, self.gray, self.light_gray, "credits")
@@ -115,7 +115,7 @@ class Menu:
             pygame.display.update()
             self.clock.tick(15)
 
-    #Tekijä valikko
+    # Tekijä valikko
     def credits(self):
 
         credits = True
@@ -145,7 +145,7 @@ class Menu:
             pygame.time.wait(5000)
             self.main_menu()
 
-    #Tason valinta valikko
+    # Tason valinta valikko
     def level_select(self):
         pygame.quit()
         pygame.init()
@@ -165,6 +165,7 @@ class Menu:
             self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard")
             pygame.display.update()
             self.clock.tick(15)
+
 
 #################################
 # GAME LUOKKA
@@ -194,7 +195,7 @@ class Game:
         # Peli looppi
         self.apple.newApple(self.gridSize)
         # Jos vaikeustaso on "Hard", generoidaan esteitä
-        if(self.gamemode.name == "Hard"):
+        if (self.gamemode.name == "Hard"):
             for i in range(10):
                 self.obstacles.append(Obstacle(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize))
                 self.obstacles[i].newObstacle(self.gridSize)
@@ -250,7 +251,7 @@ class Game:
             self.display_screen.blit(textSurf, textRect)
 
             # Törmäysten tunnistus
-            if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize))\
+            if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) \
                     or self.snake.collideWithSelf():
                 menu = Menu()
                 menu.main_menu()
@@ -259,6 +260,9 @@ class Game:
                 self.apple.newApple(self.gridSize)
                 self.snake.growSnake()
                 self.score += 1
+
+            if self.snake.isOnApple(self.apple.appleLocation()):
+                self.apple.newApple(self.gridSize)
 
             for i in range(len(self.obstacles)):
 
@@ -285,14 +289,13 @@ class Game:
         # Määritellään näytön ominaisuuksia kuten resoluutio...
         self.display_screen = pygame.display.set_mode(self.screenResolution)
         self.gridSize = 20
-        self.snake = Snake(self.windowWidth/self.gridSize, self.windowHeight/self.gridSize)
+        self.snake = Snake(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
         self.apple = Apple(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
 
         # ja title sekä ikoni...
         icon = pygame.image.load('icon.png')
         pygame.display.set_caption("Kärmespeli")
         pygame.display.set_icon(icon)
-
 
         # Käynnistetään itse peli...
         self.game_loop()
@@ -301,7 +304,7 @@ class Game:
     def drawGrid(self):
         for i in range(math.floor(self.windowWidth / (self.gridSize))):
             for j in range(4, math.floor(self.windowHeight / (self.gridSize))):
-                rect = pygame.Rect(i*self.gridSize, j*self.gridSize, self.gridSize, self.gridSize)
+                rect = pygame.Rect(i * self.gridSize, j * self.gridSize, self.gridSize, self.gridSize)
                 # Piirretään ruudukko. If else lauseilla tarkistetaan minkä värinen
                 # ruutu tulee olemaan.
                 if i % 2 == 0:

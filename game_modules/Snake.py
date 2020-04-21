@@ -108,6 +108,12 @@ class Snake(pygame.sprite.Sprite):
             return False
         return True
 
+    def isOnApple(self, appleLocation):
+        for i in range(len(self.snake)):
+            if self.snake[i] == appleLocation:
+                return True
+        return False
+
     def collideWithSelf(self):
         for i in range(1, len(self.snake)):
             if self.snake[0] == self.snake[i]:
