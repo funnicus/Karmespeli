@@ -12,10 +12,16 @@ from game_modules.Obstacle import Obstacle
 class Menu:
     # Kun peli käynnistetään, tällä enum -luokalla tiedetään
     # mikä vaikeustaso on.
-    class Gamemodes(Enum):
+    class Difficulties(Enum):
         Easy = 0
         Normal = 1
         Hard = 2
+
+    # Kun peli käynnistetään, tällä enum -luokalla tiedetään
+    # mikä vaikeustaso on.
+    class Gamemodes(Enum):
+        Solo = 1
+        Duel = 2
 
     menuWidth = 800
     menuHeight = 600
@@ -63,13 +69,13 @@ class Menu:
                     self.credits()
                 # Tason valintavalikon toiminnot
                 elif action == "easy":
-                    Peli = Game(self.Gamemodes.Easy)
+                    Peli = Game(self.Difficulties.Easy, self.Gamemodes.Solo)
                     Peli.start_game(400, 400)
                 elif action == "normal":
-                    Peli = Game(self.Gamemodes.Normal)
+                    Peli = Game(self.Difficulties.Normal, self.Gamemodes.Duel)
                     Peli.start_game(600, 600)
                 elif action == "hard":
-                    Peli = Game(self.Gamemodes.Hard)
+                    Peli = Game(self.Difficulties.Hard, self.Gamemodes.Solo)
                     Peli.start_game(800, 600)
 
 
@@ -177,17 +183,19 @@ class Game:
     screenResolution = (windowWidth, windowHeight)
     clock = pygame.time.Clock()
     snake = 0
-    score = 0
+    score1 = 0
+    score2 = 0
 
     # Pythonissa luokan konstruktori on __init__.
     # Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
     # olioon itseensä viittaavan muuttujan nimi (Javan this -avainsana).
     # Pythonissa on tapana nimittää tätä muuttujaa nimellä self,
     # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
-    def __init__(self, gamemode):
+    def __init__(self, difficulty, gamemode):
         self.running = True
         self.last = pygame.time.get_ticks()
         self.cooldown = 100
+        self.difficulty = difficulty
         self.gamemode = gamemode
         self.obstacles = []
 
@@ -195,7 +203,7 @@ class Game:
         # Peli looppi
         self.apple.newApple(self.gridSize)
         # Jos vaikeustaso on "Hard", generoidaan esteitä
-        if (self.gamemode.name == "Hard"):
+        if (self.difficulty.name == "Hard"):
             for i in range(10):
                 self.obstacles.append(Obstacle(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize))
                 self.obstacles[i].newObstacle(self.gridSize)
@@ -213,6 +221,9 @@ class Game:
                     self.apple.newApple(self.gridSize)
 
             self.snake.update(self.gridSize)
+            if self.gamemode.name == "Duel":
+                self.other_snake.update(self.gridSize)
+
             # Tapahtuma looppi
             for event in pygame.event.get():
                 # Ensimmäinen if lause käsittelee pelistä poistumisen
@@ -227,6 +238,7 @@ class Game:
                         menu.main_menu()
 
                     # Cooldowneilla estetään nappien spämmäys
+                    # Pelaaja 1
                     if event.key == K_RIGHT and now - self.last >= self.cooldown:
                         self.last = now
                         self.snake.moveRight()
@@ -242,31 +254,73 @@ class Game:
                     if event.key == K_DOWN and now - self.last >= self.cooldown:
                         self.last = now
                         self.snake.moveDown()
+                    # Pelaaja 2
+                    if event.key == K_d and now - self.last >= self.cooldown:
+                        self.last = now
+                        self.other_snake.moveRight()
+
+                    if event.key == K_a and now - self.last >= self.cooldown:
+                        self.last = now
+                        self.other_snake.moveLeft()
+
+                    if event.key == K_w and now - self.last >= self.cooldown:
+                        self.last = now
+                        self.other_snake.moveUp()
+
+                    if event.key == K_s and now - self.last >= self.cooldown:
+                        self.last = now
+                        self.other_snake.moveDown()
 
             # Pisteiden näyttäminen ruudulla
-            scoreText = "Pisteet: " + str(self.score)
-            textCont = pygame.font.Font('OpenSans-Regular.ttf', 20)
-            textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
-            textRect.center = (math.floor((self.windowWidth / 2)), 20)
-            self.display_screen.blit(textSurf, textRect)
+            if self.gamemode.name == "Solo":
+                scoreText = "Pisteet: " + str(self.score1)
+                textCont = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
+                textRect.center = (math.floor((self.windowWidth / 2)), 20)
+                self.display_screen.blit(textSurf, textRect)
+            else:
+                # Pelaaja 1
+                scoreText1 = "Pisteet p1: " + str(self.score1)
+                textCont1 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                textSurf1, textRect1 = self.text_object(scoreText1, textCont1, (255, 255, 255))
+                textRect1.center = (math.floor((self.windowWidth / 2)), 20)
+                self.display_screen.blit(textSurf1, textRect1)
+
+                # Pelaaaja 2
+                scoreText2 = "Pisteet p2: " + str(self.score2)
+                textCont2 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                textSurf2, textRect2 = self.text_object(scoreText2, textCont2, (255, 255, 255))
+                textRect2.center = (math.floor((self.windowWidth / 2)), 60)
+                self.display_screen.blit(textSurf2, textRect2)
 
             # Törmäysten tunnistus
-            if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) \
+            if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize))\
                     or self.snake.collideWithSelf():
                 menu = Menu()
                 menu.main_menu()
 
+            if self.gamemode.name == "Duel":
+                if not self.other_snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) or self.other_snake.collideWithSelf():
+                    menu = Menu()
+                    menu.main_menu()
+
             if self.snake.snakeLocation() == self.apple.appleLocation():
                 self.apple.newApple(self.gridSize)
                 self.snake.growSnake()
-                self.score += 1
+                self.score1 += 1
 
-            if self.snake.isOnApple(self.apple.appleLocation()):
+            if self.other_snake.snakeLocation() == self.apple.appleLocation():
+                self.apple.newApple(self.gridSize)
+                self.other_snake.growSnake()
+                self.score2 += 1
+
+            if self.snake.isOnApple(self.apple.appleLocation()) or self.other_snake.isOnApple(self.apple.appleLocation()):
                 self.apple.newApple(self.gridSize)
 
             for i in range(len(self.obstacles)):
 
-                if self.obstacles[i].obstacleLocation() == self.snake.snakeLocation():
+                if self.obstacles[i].obstacleLocation() == self.snake.snakeLocation()\
+                        or self.obstacles[i].obstacleLocation() == self.other_snake.snakeLocation():
                     menu = Menu()
                     menu.main_menu()
 
@@ -289,7 +343,12 @@ class Game:
         # Määritellään näytön ominaisuuksia kuten resoluutio...
         self.display_screen = pygame.display.set_mode(self.screenResolution)
         self.gridSize = 20
-        self.snake = Snake(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
+        self.snake = Snake(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize, (255, 0, 0))
+        if self.gamemode.name == "Duel":
+            self.other_snake = Snake(self.windowWidth / self.gridSize, (self.windowHeight / self.gridSize)+10, (0, 0, 255))
+        else:
+            # Jos emme pelaa duel modia, sijoitetaan p2 ulos kentältä jota se ei häiritse peliä
+            self.other_snake = Snake(self.windowWidth / self.gridSize, self.windowHeight + 10, (0, 0, 255))
         self.apple = Apple(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
 
         # ja title sekä ikoni...

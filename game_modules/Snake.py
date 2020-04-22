@@ -16,18 +16,19 @@ class Snake(pygame.sprite.Sprite):
 
     direction = Directions.Right
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, color):
         self.image = pygame.image.load('blocksnake.png')
         self.gridWidth = width
         self.gridHeight = height
         self.snake = [
-                    (int(self.gridWidth/2), int(self.gridWidth/2)),
-                    (int(self.gridWidth/2)-1, int(self.gridWidth/2)),
-                    (int(self.gridWidth/2)-2, int(self.gridWidth/2)),
-                    (int(self.gridWidth/2)-3, int(self.gridWidth/2)),
-                    (int(self.gridWidth/2)-4, int(self.gridWidth/2))
+                    (int(self.gridWidth/2), int(self.gridHeight/2)),
+                    (int(self.gridWidth/2)-1, int(self.gridHeight/2)),
+                    (int(self.gridWidth/2)-2, int(self.gridHeight/2)),
+                    (int(self.gridWidth/2)-3, int(self.gridHeight/2)),
+                    (int(self.gridWidth/2)-4, int(self.gridHeight/2))
                       ]
         self.snakeHead = self.snake[0]
+        self.color = color
 
     # update() metodilla liikutamme käärmettä.
     def update(self, gridSize):
@@ -69,12 +70,13 @@ class Snake(pygame.sprite.Sprite):
         for i in range(len(self.snake)):
             x, y = self.snake[i]
             rect = pygame.Rect(x * gridSize, y * gridSize, gridSize, gridSize)
-            # Gradientti kärmes
+            pygame.draw.rect(pygame.display.get_surface(), self.color, rect, 0)
+            '''# Gradientti kärmes
             if 255-(i*2) > 0:
                 pygame.draw.rect(pygame.display.get_surface(), (255-(i*2), 0, 0), rect, 0)
             else:
                 pygame.draw.rect(pygame.display.get_surface(), (0, 0, 0), rect, 0)
-
+            '''
     # Metodit, joilla vaihdetaan käärmeen suuntaa.
     def moveRight(self):
         if self.direction != self.Directions.Left:
