@@ -121,3 +121,9 @@ class Snake(pygame.sprite.Sprite):
             if self.snake[0] == self.snake[i]:
                 return True
         return False
+
+    def collideWithOther(self, other):
+        for i in range(0, len(self.snake)):
+            if other == self.snake[i]:
+                return True
+        return False

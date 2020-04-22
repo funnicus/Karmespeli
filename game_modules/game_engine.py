@@ -341,6 +341,11 @@ class Game:
                         if not self.game_over:
                             self.game_over = not self.game_over
 
+                    if self.snake.collideWithOther(self.other_snake.snakeLocation()) or self.other_snake.collideWithOther(self.snake.snakeLocation()):
+                        if not self.game_over:
+                            self.game_over = not self.game_over
+                        self
+
                 if self.snake.snakeLocation() == self.apple.appleLocation():
                     self.apple.newApple(self.gridSize)
                     self.snake.growSnake()
