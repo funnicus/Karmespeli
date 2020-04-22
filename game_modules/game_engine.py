@@ -60,22 +60,35 @@ class Menu:
 
             if click[0] == 1 and action != None:
                 # Päävalikon toiminnot
-                if action == "play":
-                    self.level_select()
+                if action == "playsp":
+                    self.sp_select()
+                if action == "playmp":
+                    self.duel_select()
                 elif action == "quit":
                     pygame.quit()
                     quit()
                 elif action == "credits":
                     self.credits()
-                # Tason valintavalikon toiminnot
+                # Vaikeustason valintavalikon toiminnot
+                #1 pelaaja
                 elif action == "easy":
                     Peli = Game(self.Difficulties.Easy, self.Gamemodes.Solo)
                     Peli.start_game(400, 400)
                 elif action == "normal":
-                    Peli = Game(self.Difficulties.Normal, self.Gamemodes.Duel)
+                    Peli = Game(self.Difficulties.Normal, self.Gamemodes.Solo)
                     Peli.start_game(600, 600)
                 elif action == "hard":
                     Peli = Game(self.Difficulties.Hard, self.Gamemodes.Solo)
+                    Peli.start_game(800, 600)
+                #2 pelaajaa
+                elif action == "easy_duel":
+                    Peli = Game(self.Difficulties.Easy, self.Gamemodes.Duel)
+                    Peli.start_game(400, 400)
+                elif action == "normal_duel":
+                    Peli = Game(self.Difficulties.Normal, self.Gamemodes.Duel)
+                    Peli.start_game(600, 600)
+                elif action == "hard_duel":
+                    Peli = Game(self.Difficulties.Hard, self.Gamemodes.Duel)
                     Peli.start_game(800, 600)
 
 
@@ -114,9 +127,10 @@ class Menu:
             self.menu_screen.blit(textSurf, textRect)
 
             # Nappien luonti
-            self.button("ALOITA PELI!", 160, 200, 500, 75, self.green, self.light_green, "play")
-            self.button("SULJE PELI!", 160, 400, 500, 75, self.red, self.light_red, "quit")
-            self.button("TEKIJÄT", 160, 300, 500, 75, self.gray, self.light_gray, "credits")
+            self.button("YKSINPELI", 160, 200, 500, 75, self.green, self.light_green, "playsp")
+            self.button("KAKSINPELI", 160, 300, 500, 75, self.green, self.light_green, "playmp")
+            self.button("TEKIJÄT", 160, 400, 500, 75, self.gray, self.light_gray, "credits")
+            self.button("SULJE PELI", 160, 500, 500, 75, self.red, self.light_red, "quit")
 
             pygame.display.update()
             self.clock.tick(15)
@@ -152,7 +166,7 @@ class Menu:
             self.main_menu()
 
     # Tason valinta valikko
-    def level_select(self):
+    def sp_select(self):
         pygame.quit()
         pygame.init()
         self.menuWidth = 800
@@ -169,6 +183,26 @@ class Menu:
             self.button("HELPPO", 160, 200, 500, 75, self.green, self.light_green, "easy")
             self.button("NORMAALI", 160, 300, 500, 75, self.yellow, self.light_yellow, "normal")
             self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard")
+            pygame.display.update()
+            self.clock.tick(15)
+
+    def duel_select(self):
+        pygame.quit()
+        pygame.init()
+        self.menuWidth = 800
+        self.menuHeight = 600
+        self.menuResolution = (self.menuWidth, self.menuHeight)
+        self.menu_screen = pygame.display.set_mode(self.menuResolution)
+        level = True
+        while level:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    quit()
+            self.menu_screen.fill(self.black)
+            self.button("HELPPO", 160, 200, 500, 75, self.green, self.light_green, "easy_duel")
+            self.button("NORMAALI", 160, 300, 500, 75, self.yellow, self.light_yellow, "normal_duel")
+            self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard_duel")
             pygame.display.update()
             self.clock.tick(15)
 
@@ -326,6 +360,7 @@ class Game:
                 self.drawText("Pysäytetty...", font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 2))
 
             if self.game_over:
+                restart = ""
                 text = "PELI PÄÄTTYI"
                 font = pygame.font.Font('OpenSans-Regular.ttf', 60)
                 self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 3))
@@ -346,7 +381,15 @@ class Game:
                     text = "Pelaaja 2: " + str(self.score2)
                     font = pygame.font.Font('OpenSans-Regular.ttf', 25)
                     self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 1.6))))
+                if self.difficulty.name == "easy":
+                    restart = "easy"
+                elif self.difficulty.name == "normal":
+                    restart = "normal"
+                elif self.difficulty.name == "hard":
+                    restart = "hard"
 
+                #menu = Menu()
+                #menu.button("ALOITA UUDELLEEN", math.floor((self.windowWidth / 1.5)), math.floor((self.windowHeight / 2)), math.floor((self.windowWidth / 1.5)), 75, (150, 150, 150), (200, 200, 200), restart)
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
 
