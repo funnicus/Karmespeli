@@ -394,8 +394,7 @@ class Game:
                 elif self.difficulty.name == "hard":
                     restart = "hard"
 
-                #menu = Menu()
-                #menu.button("ALOITA UUDELLEEN", math.floor((self.windowWidth / 1.5)), math.floor((self.windowHeight / 2)), math.floor((self.windowWidth / 1.5)), 75, (150, 150, 150), (200, 200, 200), restart)
+
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
 
