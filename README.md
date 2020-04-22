@@ -18,5 +18,4 @@ Se on yksinkertainen matopeli, joka on luotu pythonin __pygame__ -pelikirjastoll
     * Game over -ruutu
     * Peli voisi olla pysähdyksissä hieman ennen kuin se alkaa
     (tämä olisi tärkeää varsinkin Hardmodella)
-    * pause ominaisuus
     * Nappien responsiivisuus tuntuu vielä välillä hieman jähmeältä

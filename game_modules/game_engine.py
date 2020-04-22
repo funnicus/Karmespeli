@@ -205,7 +205,7 @@ class Game:
         self.apple.newApple(self.gridSize)
         # Jos vaikeustaso on "Hard", generoidaan esteitä
         if (self.difficulty.name == "Hard"):
-            for i in range(10):
+            for i in range(random.randint(7, 15)):
                 self.obstacles.append(Obstacle(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize))
                 self.obstacles[i].newObstacle(self.gridSize)
 
