@@ -281,25 +281,16 @@ class Game:
 
                 # Pisteiden näyttäminen ruudulla
                 if self.gamemode.name == "Solo":
-                    scoreText = "Pisteet: " + str(self.score1)
-                    textCont = pygame.font.Font('OpenSans-Regular.ttf', 20)
-                    textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
-                    textRect.center = (math.floor((self.windowWidth / 2)), 20)
-                    self.display_screen.blit(textSurf, textRect)
+                    font = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    self.drawText("Pisteet: " + str(self.score1), font, (255, 255, 255), (math.floor((self.windowWidth / 2)), 20))
                 else:
                     # Pelaaja 1
-                    scoreText1 = "Pisteet p1: " + str(self.score1)
-                    textCont1 = pygame.font.Font('OpenSans-Regular.ttf', 20)
-                    textSurf1, textRect1 = self.text_object(scoreText1, textCont1, (255, 255, 255))
-                    textRect1.center = (math.floor((self.windowWidth / 2)), 20)
-                    self.display_screen.blit(textSurf1, textRect1)
+                    font1 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    self.drawText("Pelaaja 1: " + str(self.score1), font1, (255, 255, 255), (math.floor((self.windowWidth / 2)), 20))
 
                     # Pelaaaja 2
-                    scoreText2 = "Pisteet p2: " + str(self.score2)
-                    textCont2 = pygame.font.Font('OpenSans-Regular.ttf', 20)
-                    textSurf2, textRect2 = self.text_object(scoreText2, textCont2, (255, 255, 255))
-                    textRect2.center = (math.floor((self.windowWidth / 2)), 60)
-                    self.display_screen.blit(textSurf2, textRect2)
+                    font2 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    self.drawText("Pelaaja 2: " + str(self.score2), font2, (255, 255, 255), (math.floor((self.windowWidth / 2)), 60))
 
                 # Törmäysten tunnistus
                 if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize))\
@@ -328,44 +319,33 @@ class Game:
                     if self.obstacles[i].obstacleLocation() == self.snake.snakeLocation()\
                             or self.obstacles[i].obstacleLocation() == self.other_snake.snakeLocation():
                         self.game_over = not self.game_over
+
             if self.pause:
                 self.display_screen.fill((10, 10, 10))
-                text = "Pysäytetty..."
-                textContent = pygame.font.Font('OpenSans-Regular.ttf', 60)
-                textSurface, textRectangle = self.text_object(text, textContent, (255, 255, 255))
-                textRectangle.center = (math.floor((self.windowWidth / 2)), self.windowHeight / 2)
-                self.display_screen.blit(textSurface, textRectangle)
+                font = pygame.font.Font('OpenSans-Regular.ttf', 60)
+                self.drawText("Pysäytetty...", font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 2))
 
             if self.game_over:
                 text = "PELI PÄÄTTYI"
-                textContent = pygame.font.Font('OpenSans-Regular.ttf', 60)
-                textSurface, textRectangle = self.text_object(text, textContent, (255, 255, 255))
-                textRectangle.center = (math.floor((self.windowWidth / 2)), self.windowHeight / 3)
-                self.display_screen.blit(textSurface, textRectangle)
+                font = pygame.font.Font('OpenSans-Regular.ttf', 60)
+                self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 3))
                 pygame.draw.rect(self.display_screen, (10, 10, 10), (math.floor(self.windowWidth / 2.6), 10, 150, 50))
 
                 if self.gamemode.name == "Solo":
-                    scoreText = "Pisteet: " + str(self.score1)
-                    textCont = pygame.font.Font('OpenSans-Regular.ttf', 25)
-                    textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
-                    textRect.center = (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2)))
-                    self.display_screen.blit(textSurf, textRect)
+                    text = "Pisteet: " + str(self.score1)
+                    font = pygame.font.Font('OpenSans-Regular.ttf', 25)
+                    self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2))))
                 else:
-                    pygame.draw.rect(self.display_screen, (10, 10, 10),
-                                     (math.floor(self.windowWidth / 2.6), 25, 150, 50))
+                    pygame.draw.rect(self.display_screen, (10, 10, 10), (math.floor(self.windowWidth / 2.6), 25, 150, 50))
                     # Pelaaja 1
-                    scoreText1 = "Pisteet p1: " + str(self.score1)
-                    textCont1 = pygame.font.Font('OpenSans-Regular.ttf', 25)
-                    textSurf1, textRect1 = self.text_object(scoreText1, textCont1, (255, 255, 255))
-                    textRect1.center = (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2)))
-                    self.display_screen.blit(textSurf1, textRect1)
+                    text = "Pelaaja 1: " + str(self.score1)
+                    font = pygame.font.Font('OpenSans-Regular.ttf', 25)
+                    self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2))))
 
                     # Pelaaaja 2
-                    scoreText2 = "Pisteet p2: " + str(self.score2)
-                    textCont2 = pygame.font.Font('OpenSans-Regular.ttf', 25)
-                    textSurf2, textRect2 = self.text_object(scoreText2, textCont2, (255, 255, 255))
-                    textRect2.center = (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 1.6)))
-                    self.display_screen.blit(textSurf2, textRect2)
+                    text = "Pelaaja 2: " + str(self.score2)
+                    font = pygame.font.Font('OpenSans-Regular.ttf', 25)
+                    self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 1.6))))
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
@@ -419,6 +399,11 @@ class Game:
                         pygame.draw.rect(self.display_screen, (0, 230, 0), rect, 0)
                     else:
                         pygame.draw.rect(self.display_screen, (0, 255, 0), rect, 0)
+
+    def drawText(self, text, font, textColor, location):
+        textSurface, textRectangle = self.text_object(text, font, textColor)
+        textRectangle.center = location
+        self.display_screen.blit(textSurface, textRectangle)
 
     def text_object(self, text, font, colour):
         textSurface = font.render(text, True, colour)
