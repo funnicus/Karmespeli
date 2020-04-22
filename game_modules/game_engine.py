@@ -228,6 +228,7 @@ class Game:
     def __init__(self, difficulty, gamemode):
         self.running = True
         self.last = pygame.time.get_ticks()
+        self.last2 = pygame.time.get_ticks()
         self.cooldown = 100
         self.difficulty = difficulty
         self.gamemode = gamemode
@@ -255,6 +256,7 @@ class Game:
 
                 elif event.type == KEYDOWN:
                     now = pygame.time.get_ticks()
+                    now2 = pygame.time.get_ticks()
                     if event.key == K_ESCAPE:
                         menu = Menu()
                         menu.main_menu()
@@ -280,20 +282,20 @@ class Game:
                         self.last = now
                         self.snake.moveDown()
                     # Pelaaja 2
-                    if event.key == K_d and now - self.last >= self.cooldown:
-                        self.last = now
+                    if event.key == K_d and now2 - self.last2 >= self.cooldown:
+                        self.last2 = now2
                         self.other_snake.moveRight()
 
-                    if event.key == K_a and now - self.last >= self.cooldown:
-                        self.last = now
+                    if event.key == K_a and now2 - self.last2 >= self.cooldown:
+                        self.last2 = now2
                         self.other_snake.moveLeft()
 
-                    if event.key == K_w and now - self.last >= self.cooldown:
-                        self.last = now
+                    if event.key == K_w and now2 - self.last2 >= self.cooldown:
+                        self.last2 = now2
                         self.other_snake.moveUp()
 
-                    if event.key == K_s and now - self.last >= self.cooldown:
-                        self.last = now
+                    if event.key == K_s and now2 - self.last2 >= self.cooldown:
+                        self.last2 = now2
                         self.other_snake.moveDown()
 
             # Onko peli pysäytetty?
@@ -329,11 +331,15 @@ class Game:
                 # Törmäysten tunnistus
                 if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize))\
                         or self.snake.collideWithSelf():
-                    self.game_over = not self.game_over
+                    # Tarkistetaan että peli ei ole jo loppunut
+                    if not self.game_over:
+                        self.game_over = not self.game_over
 
                 if self.gamemode.name == "Duel":
                     if not self.other_snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) or self.other_snake.collideWithSelf():
-                        self.game_over = not self.game_over
+                        # Tarkistetaan että peli ei ole jo loppunut
+                        if not self.game_over:
+                            self.game_over = not self.game_over
 
                 if self.snake.snakeLocation() == self.apple.appleLocation():
                     self.apple.newApple(self.gridSize)
