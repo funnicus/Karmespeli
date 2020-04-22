@@ -198,6 +198,7 @@ class Game:
         self.difficulty = difficulty
         self.gamemode = gamemode
         self.obstacles = []
+        self.pause = False
 
     def game_loop(self):
         # Peli looppi
@@ -209,20 +210,6 @@ class Game:
                 self.obstacles[i].newObstacle(self.gridSize)
 
         while self.running:
-            # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
-            self.clock.tick(10)
-            self.display_screen.fill((10, 10, 10))
-            self.drawGrid()
-            self.apple.drawApple()
-
-            for i in range(len(self.obstacles)):
-                self.obstacles[i].drawObstacle()
-                if self.obstacles[i].obstacleLocation() == self.apple.appleLocation():
-                    self.apple.newApple(self.gridSize)
-
-            self.snake.update(self.gridSize)
-            if self.gamemode.name == "Duel":
-                self.other_snake.update(self.gridSize)
 
             # Tapahtuma looppi
             for event in pygame.event.get():
@@ -236,6 +223,9 @@ class Game:
                     if event.key == K_ESCAPE:
                         menu = Menu()
                         menu.main_menu()
+
+                    if event.key == K_SPACE:
+                        self.pause = not self.pause
 
                     # Cooldowneilla estetään nappien spämmäys
                     # Pelaaja 1
@@ -271,58 +261,82 @@ class Game:
                         self.last = now
                         self.other_snake.moveDown()
 
-            # Pisteiden näyttäminen ruudulla
-            if self.gamemode.name == "Solo":
-                scoreText = "Pisteet: " + str(self.score1)
-                textCont = pygame.font.Font('OpenSans-Regular.ttf', 20)
-                textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
-                textRect.center = (math.floor((self.windowWidth / 2)), 20)
-                self.display_screen.blit(textSurf, textRect)
+            # Onko peli pysäytetty?
+            if not self.pause:
+                # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
+                self.clock.tick(10)
+                self.display_screen.fill((10, 10, 10))
+                self.drawGrid()
+                self.apple.drawApple()
+
+                for i in range(len(self.obstacles)):
+                    self.obstacles[i].drawObstacle()
+                    if self.obstacles[i].obstacleLocation() == self.apple.appleLocation():
+                        self.apple.newApple(self.gridSize)
+
+                self.snake.update(self.gridSize)
+                if self.gamemode.name == "Duel":
+                    self.other_snake.update(self.gridSize)
+
+                # Pisteiden näyttäminen ruudulla
+                if self.gamemode.name == "Solo":
+                    scoreText = "Pisteet: " + str(self.score1)
+                    textCont = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    textSurf, textRect = self.text_object(scoreText, textCont, (255, 255, 255))
+                    textRect.center = (math.floor((self.windowWidth / 2)), 20)
+                    self.display_screen.blit(textSurf, textRect)
+                else:
+                    # Pelaaja 1
+                    scoreText1 = "Pisteet p1: " + str(self.score1)
+                    textCont1 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    textSurf1, textRect1 = self.text_object(scoreText1, textCont1, (255, 255, 255))
+                    textRect1.center = (math.floor((self.windowWidth / 2)), 20)
+                    self.display_screen.blit(textSurf1, textRect1)
+
+                    # Pelaaaja 2
+                    scoreText2 = "Pisteet p2: " + str(self.score2)
+                    textCont2 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    textSurf2, textRect2 = self.text_object(scoreText2, textCont2, (255, 255, 255))
+                    textRect2.center = (math.floor((self.windowWidth / 2)), 60)
+                    self.display_screen.blit(textSurf2, textRect2)
+
+                # Törmäysten tunnistus
+                if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize))\
+                        or self.snake.collideWithSelf():
+                    menu = Menu()
+                    menu.main_menu()
+
+                if self.gamemode.name == "Duel":
+                    if not self.other_snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) or self.other_snake.collideWithSelf():
+                        menu = Menu()
+                        menu.main_menu()
+
+                if self.snake.snakeLocation() == self.apple.appleLocation():
+                    self.apple.newApple(self.gridSize)
+                    self.snake.growSnake()
+                    self.score1 += 1
+
+                if self.other_snake.snakeLocation() == self.apple.appleLocation():
+                    self.apple.newApple(self.gridSize)
+                    self.other_snake.growSnake()
+                    self.score2 += 1
+
+                if self.snake.isOnApple(self.apple.appleLocation()) or self.other_snake.isOnApple(self.apple.appleLocation()):
+                    self.apple.newApple(self.gridSize)
+
+                for i in range(len(self.obstacles)):
+
+                    if self.obstacles[i].obstacleLocation() == self.snake.snakeLocation()\
+                            or self.obstacles[i].obstacleLocation() == self.other_snake.snakeLocation():
+                        menu = Menu()
+                        menu.main_menu()
             else:
-                # Pelaaja 1
-                scoreText1 = "Pisteet p1: " + str(self.score1)
-                textCont1 = pygame.font.Font('OpenSans-Regular.ttf', 20)
-                textSurf1, textRect1 = self.text_object(scoreText1, textCont1, (255, 255, 255))
-                textRect1.center = (math.floor((self.windowWidth / 2)), 20)
-                self.display_screen.blit(textSurf1, textRect1)
-
-                # Pelaaaja 2
-                scoreText2 = "Pisteet p2: " + str(self.score2)
-                textCont2 = pygame.font.Font('OpenSans-Regular.ttf', 20)
-                textSurf2, textRect2 = self.text_object(scoreText2, textCont2, (255, 255, 255))
-                textRect2.center = (math.floor((self.windowWidth / 2)), 60)
-                self.display_screen.blit(textSurf2, textRect2)
-
-            # Törmäysten tunnistus
-            if not self.snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize))\
-                    or self.snake.collideWithSelf():
-                menu = Menu()
-                menu.main_menu()
-
-            if self.gamemode.name == "Duel":
-                if not self.other_snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) or self.other_snake.collideWithSelf():
-                    menu = Menu()
-                    menu.main_menu()
-
-            if self.snake.snakeLocation() == self.apple.appleLocation():
-                self.apple.newApple(self.gridSize)
-                self.snake.growSnake()
-                self.score1 += 1
-
-            if self.other_snake.snakeLocation() == self.apple.appleLocation():
-                self.apple.newApple(self.gridSize)
-                self.other_snake.growSnake()
-                self.score2 += 1
-
-            if self.snake.isOnApple(self.apple.appleLocation()) or self.other_snake.isOnApple(self.apple.appleLocation()):
-                self.apple.newApple(self.gridSize)
-
-            for i in range(len(self.obstacles)):
-
-                if self.obstacles[i].obstacleLocation() == self.snake.snakeLocation()\
-                        or self.obstacles[i].obstacleLocation() == self.other_snake.snakeLocation():
-                    menu = Menu()
-                    menu.main_menu()
+                self.display_screen.fill((10, 10, 10))
+                text = "Pysäytetty..."
+                textContent = pygame.font.Font('OpenSans-Regular.ttf', 60)
+                textSurface, textRectangle = self.text_object(text, textContent, (255, 255, 255))
+                textRectangle.center = (math.floor((self.windowWidth / 2)), self.windowHeight / 2)
+                self.display_screen.blit(textSurface, textRectangle)
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
