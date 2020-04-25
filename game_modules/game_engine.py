@@ -374,6 +374,7 @@ class Game:
                     self.apple.newApple(self.gridSize)
                     self.other_snake.growSnake()
                     self.score2 += 1
+                    pygame.mixer.Sound.play(self.bite_sound)
 
                 if self.snake.isOnApple(self.apple.appleLocation()) or self.other_snake.isOnApple(self.apple.appleLocation()):
                     self.apple.newApple(self.gridSize)
