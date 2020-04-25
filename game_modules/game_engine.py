@@ -246,6 +246,7 @@ class Game:
     #Äänet
     pygame.mixer.init()
     bite_sound = pygame.mixer.Sound('sounds/bite_sound.wav')
+    fail_sound = pygame.mixer.Sound('sounds/fail_sound.wav')
     pygame.mixer.music.load('sounds/Komiku_-_03_-_Mushrooms.mp3')
 
     # Pythonissa luokan konstruktori on __init__.
@@ -364,16 +365,19 @@ class Game:
                     # Tarkistetaan että peli ei ole jo loppunut
                     if not self.game_over:
                         self.game_over = not self.game_over
+                        pygame.mixer.Sound.play(self.fail_sound)
 
                 if self.gamemode.name == "Duel":
                     if not self.other_snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) or self.other_snake.collideWithSelf():
                         # Tarkistetaan että peli ei ole jo loppunut
                         if not self.game_over:
                             self.game_over = not self.game_over
+                            pygame.mixer.Sound.play(self.fail_sound)
 
                     if self.snake.collideWithOther(self.other_snake.snakeLocation()) or self.other_snake.collideWithOther(self.snake.snakeLocation()):
                         if not self.game_over:
                             self.game_over = not self.game_over
+                            pygame.mixer.Sound.play(self.fail_sound)
 
                 if self.snake.snakeLocation() == self.apple.appleLocation():
                     self.apple.newApple(self.gridSize)
@@ -395,6 +399,7 @@ class Game:
                     if self.obstacles[i].obstacleLocation() == self.snake.snakeLocation()\
                             or self.obstacles[i].obstacleLocation() == self.other_snake.snakeLocation():
                         self.game_over = not self.game_over
+                        pygame.mixer.Sound.play(self.fail_sound)
             #Pause ruutu
             if self.pause:
                 self.display_screen.fill((10, 10, 10))
