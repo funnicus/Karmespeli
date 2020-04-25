@@ -110,7 +110,9 @@ class Menu:
                 elif action == "hard_duel":
                     Peli = Game(self.Difficulties.Hard, self.Gamemodes.Duel)
                     Peli.start_game(800, 600)
-
+                elif action == "continue":
+                    game = Game()
+                    game.pause = False
         #Kun hiiri ei ole näppäimen päällä
         else:
             pygame.draw.rect(self.menu_screen, ic, (x, y, width, height))
@@ -125,6 +127,8 @@ class Menu:
 
     # Aloitus valikko pelille
     def main_menu(self):
+
+        pygame.mixer.music.stop()
 
         self.menuWidth = 800
         self.menuHeight = 600
@@ -259,7 +263,7 @@ class Game:
     # olioon itseensä viittaavan muuttujan nimi (Javan this -avainsana).
     # Pythonissa on tapana nimittää tätä muuttujaa nimellä self,
     # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
-    def __init__(self, difficulty, gamemode):
+    def __init__(self, difficulty=None, gamemode=None):
         self.running = True
         self.last = pygame.time.get_ticks()
         self.last2 = pygame.time.get_ticks()
@@ -282,7 +286,6 @@ class Game:
                 self.obstacles[i].newObstacle(self.gridSize)
 
         while self.running:
-
             # Tapahtuma looppi
             for event in pygame.event.get():
                 # Ensimmäinen if lause käsittelee pelistä poistumisen
@@ -411,10 +414,52 @@ class Game:
                         pygame.mixer.music.stop()
 
             #Pause ruutu
-            if self.pause:
+            if self.pause and not self.game_over:
+                x = None
+                y = None
+                width = None
+                height = None
+                fontsize = None
+                menu = Menu()
                 self.display_screen.fill((10, 10, 10))
                 font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 60)
-                self.drawText("Pysäytetty...", font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 2))
+                self.drawText("Pysäytetty...", font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 3))
+                if self.difficulty.name == "Easy":
+                    fontsize = 30
+                    x = 60
+                    y = 220
+                    width = 280
+                    height = 75
+                elif self.difficulty.name == "Normal":
+                    fontsize = 40
+                    x = 100
+                    y = 300
+                    width = 400
+                    height = 75
+                elif self.difficulty.name == "Hard":
+                    fontsize = 40
+                    x = 200
+                    y = 300
+                    width = 400
+                    height = 75
+                mouse = pygame.mouse.get_pos()
+                click = pygame.mouse.get_pressed()
+
+                # Näppäimen luominen
+                # Kun hiiri on näppäimen päällä
+
+                if x + width > mouse[0] > x and y + height > mouse[1] > y:
+                    pygame.draw.rect(self.display_screen, (150, 255, 150), (x, y, width, height))
+                    # Tapahtuma kun hiirellä klikkaa
+                    if click[0] == 1:
+                        pygame.mixer.Sound.play(menu.click_sound)
+                        self.pause = not self.pause
+                else:
+                    pygame.draw.rect(self.display_screen, (150, 185, 150), (x, y, width, height))
+
+                font = pygame.font.Font('fonts/OpenSans-Regular.ttf', fontsize)
+                self.drawText("JATKA PELIÄ", font, (10, 10, 10), ((x + width / 2), y + 35))
+                menu.button("PÄÄVALIKKOON", x, y+90, width, height, (150, 150, 150), (200, 200, 200), "menu", fontsize)
 
             #Pelin lopetusruutu
             if self.game_over:
@@ -496,7 +541,6 @@ class Game:
                 menu = Menu()
                 menu.button("PELAA UUDELLEEN", x, y, width, height, (150, 185, 150), (150, 255, 150), restart, fontsize)
                 menu.button("PÄÄVALIKKOON", x, y+90, width, height, (150, 150, 150), (200, 200, 200), "menu", fontsize)
-
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
