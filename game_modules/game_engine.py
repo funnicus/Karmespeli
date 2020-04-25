@@ -161,13 +161,19 @@ class Menu:
 
     # Tekijä valikko
     def credits(self):
-
+        cooldown = 5000
+        last = pygame.time.get_ticks()
         credits = True
         while credits:
+            now = pygame.time.get_ticks()
             for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    quit()
+                if event.type == QUIT or now - last >= cooldown:
+                    last = now
+                    credits = False
+                elif event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        menu = Menu()
+                        menu.main_menu()
 
             self.menu_screen.fill((10, 10, 10))
 
@@ -184,8 +190,8 @@ class Menu:
             self.drawText(text, font, self.white, (400, 400))
 
             pygame.display.update()
-            pygame.time.wait(5000)
-            self.main_menu()
+
+        self.main_menu()
 
     # Tason valinta valikko
     def sp_select(self):
