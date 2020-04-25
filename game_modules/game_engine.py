@@ -235,6 +235,10 @@ class Game:
     score1 = 0
     score2 = 0
 
+    #Äänet
+    pygame.mixer.init()
+    bite_sound = pygame.mixer.Sound('sounds/bite_sound.wav')
+
     # Pythonissa luokan konstruktori on __init__.
     # Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
     # olioon itseensä viittaavan muuttujan nimi (Javan this -avainsana).
@@ -364,6 +368,7 @@ class Game:
                     self.apple.newApple(self.gridSize)
                     self.snake.growSnake()
                     self.score1 += 1
+                    pygame.mixer.Sound.play(self.bite_sound)
 
                 if self.other_snake.snakeLocation() == self.apple.appleLocation():
                     self.apple.newApple(self.gridSize)
