@@ -2,7 +2,6 @@ import pygame, sys
 import math
 import random
 from enum import Enum
-from typing import Tuple
 from pygame.locals import *
 from game_modules.Snake import Snake
 from game_modules.Apple import Apple
