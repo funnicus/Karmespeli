@@ -246,6 +246,7 @@ class Game:
     #Äänet
     pygame.mixer.init()
     bite_sound = pygame.mixer.Sound('sounds/bite_sound.wav')
+    pygame.mixer.music.load('sounds/Komiku_-_03_-_Mushrooms.mp3')
 
     # Pythonissa luokan konstruktori on __init__.
     # Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
@@ -266,6 +267,8 @@ class Game:
     def game_loop(self):
         # Peli looppi
         self.apple.newApple(self.gridSize)
+        # Musiikki
+        pygame.mixer.music.play(-1)
         # Jos vaikeustaso on "Hard", generoidaan esteitä
         if (self.difficulty.name == "Hard"):
             for i in range(random.randint(7, 15)):
