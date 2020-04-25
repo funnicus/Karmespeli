@@ -11,12 +11,10 @@ Se on yksinkertainen matopeli, joka on luotu pythonin __pygame__ -pelikirjastoll
 ### Todo
 
 * Pelin voittaminen kun kärmes täyttää ruudun
-* Kaksintaistelu modi
 * Äänet (ja niille myös mute)
 * Grafiikkaa (Uusi ikoni, itse piirretty kärmes, esteet ja omenat)
 * Intro ruutu enne päävalikkoa
 * Muuta hienosäätöä
-    * Game over -ruutu
     * Peli voisi olla pysähdyksissä hieman ennen kuin se alkaa
     (tämä olisi tärkeää varsinkin Hardmodella)
     * Nappien responsiivisuus tuntuu vielä välillä hieman jähmeältä
