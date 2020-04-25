@@ -400,6 +400,7 @@ class Game:
                             or self.obstacles[i].obstacleLocation() == self.other_snake.snakeLocation():
                         self.game_over = not self.game_over
                         pygame.mixer.Sound.play(self.fail_sound)
+
             #Pause ruutu
             if self.pause:
                 self.display_screen.fill((10, 10, 10))
