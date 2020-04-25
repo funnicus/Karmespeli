@@ -17,7 +17,9 @@ class Snake(pygame.sprite.Sprite):
     direction = Directions.Right
 
     def __init__(self, width, height, color):
-        self.image = pygame.image.load('blocksnake.png')
+        self.headImg = pygame.image.load('pictures/Matopeli_mato_paa.png')
+        self.bodyImg = pygame.image.load('pictures/Matopeli_mato_paa.png')
+        self.tailImg = pygame.image.load('pictures/Matopeli_mato_paa.png')
         self.gridWidth = width
         self.gridHeight = height
         self.snake = [

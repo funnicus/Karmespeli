@@ -110,10 +110,10 @@ class Menu:
 
         # Teksti
         if fontsize != None:
-            font = pygame.font.Font('OpenSans-Regular.ttf', fontsize)
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', fontsize)
             self.drawText(message, font, self.black, ((x + width / 2), y + 35))
         else:
-            font = pygame.font.Font('OpenSans-Regular.ttf', 40)
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 40)
             self.drawText(message, font, self.black, ((x + width/2), y + 35))
 
     # Aloitus valikko pelille
@@ -125,7 +125,7 @@ class Menu:
         self.menu_screen = pygame.display.set_mode(self.menuResolution)
 
         pygame.init()
-        icon = pygame.image.load('icon.png')
+        icon = pygame.image.load('pictures/icon.png')
         pygame.display.set_caption("Kärmespeli")
         pygame.display.set_icon(icon)
         menu = True
@@ -140,7 +140,7 @@ class Menu:
             # Main menu otsikko ja tausta
             self.menu_screen.fill(self.black)
             text = "KÄRMESPELI"
-            font = pygame.font.Font('OpenSans-Bold.ttf', 100)
+            font = pygame.font.Font('fonts/OpenSans-Bold.ttf', 100)
             self.drawText(text, font, self.white,(math.floor((self.menuWidth / 2)), 100))
 
             # Nappien luonti
@@ -165,15 +165,15 @@ class Menu:
             self.menu_screen.fill((10, 10, 10))
 
             text = "Juhana Kuparinen"
-            font = pygame.font.Font('OpenSans-Regular.ttf', 50)
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 50)
             self.drawText(text, font, self.white, (400, 200))
 
             text = "Juho Ollila"
-            font = pygame.font.Font('OpenSans-Regular.ttf', 50)
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 50)
             self.drawText(text, font, self.white, (400, 300))
 
             text = "Johanna Seulu"
-            font = pygame.font.Font('OpenSans-Regular.ttf', 50)
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 50)
             self.drawText(text, font, self.white, (400, 400))
 
             pygame.display.update()
@@ -332,15 +332,15 @@ class Game:
 
                 # Pisteiden näyttäminen ruudulla
                 if self.gamemode.name == "Solo":
-                    font = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 20)
                     self.drawText("Pisteet: " + str(self.score1), font, (255, 255, 255), (math.floor((self.windowWidth / 2)), 20))
                 else:
                     # Pelaaja 1
-                    font1 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    font1 = pygame.font.Font('fonts/OpenSans-Regular.ttf', 20)
                     self.drawText("Pelaaja 1: " + str(self.score1), font1, (255, 255, 255), (math.floor((self.windowWidth / 2)), 20))
 
                     # Pelaaaja 2
-                    font2 = pygame.font.Font('OpenSans-Regular.ttf', 20)
+                    font2 = pygame.font.Font('fonts/OpenSans-Regular.ttf', 20)
                     self.drawText("Pelaaja 2: " + str(self.score2), font2, (255, 255, 255), (math.floor((self.windowWidth / 2)), 60))
 
                 # Törmäysten tunnistus
@@ -381,7 +381,7 @@ class Game:
             #Pause ruutu
             if self.pause:
                 self.display_screen.fill((10, 10, 10))
-                font = pygame.font.Font('OpenSans-Regular.ttf', 60)
+                font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 60)
                 self.drawText("Pysäytetty...", font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 2))
 
             #Pelin lopetusruutu
@@ -389,33 +389,33 @@ class Game:
                 menu = Menu()
                 restart = ""
                 text = "PELI PÄÄTTYI"
-                font = pygame.font.Font('OpenSans-Regular.ttf', 60)
+                font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 60)
                 self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 3))
                 pygame.draw.rect(self.display_screen, (10, 10, 10), (math.floor(self.windowWidth / 2.6), 10, 150, 50))
 
                 if self.gamemode.name == "Solo":
                     text = "Pisteet: " + str(self.score1)
-                    font = pygame.font.Font('OpenSans-Regular.ttf', 25)
+                    font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
                     self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2))))
                 else:
                     pygame.draw.rect(self.display_screen, (10, 10, 10), (math.floor(self.windowWidth / 2.6), 25, 150, 50))
                     # Pelaaja 1
                     text = "Pelaaja 1 pisteet: " + str(self.score1)
-                    font = pygame.font.Font('OpenSans-Regular.ttf', 25)
+                    font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
                     self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2))))
 
                     # Pelaaaja 2
                     text = "Pelaaja 2 pisteet: " + str(self.score2)
-                    font = pygame.font.Font('OpenSans-Regular.ttf', 25)
+                    font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
                     self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 1.7))))
                     #Katsotaan kumpi pelaaja voitti
                     if self.score1 > self.score2:
                         text = "Pelaaja 1 voitti pelin!"
-                        font = pygame.font.Font('OpenSans-Regular.ttf', 40)
+                        font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 40)
                         self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2.4))))
                     elif self.score2 > self.score1:
                         text = "Pelaaja 2 voitti pelin!"
-                        font = pygame.font.Font('OpenSans-Regular.ttf', 40)
+                        font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 40)
                         self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), math.floor((self.windowHeight / 2.4))))
                 #Nappien arvojen määrittäminen eri vaikeustasoille
                 if self.difficulty.name == "Easy" and self.gamemode.name == "Solo":
@@ -494,7 +494,7 @@ class Game:
         self.apple = Apple(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
 
         # ja title sekä ikoni...
-        icon = pygame.image.load('icon.png')
+        icon = pygame.image.load('pictures/icon.png')
         pygame.display.set_caption("Kärmespeli")
         pygame.display.set_icon(icon)
 
