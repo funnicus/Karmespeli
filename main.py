@@ -2,7 +2,7 @@
 # Soveltava projekti 2020
 # Johanna Seulu, Juhana Kuparinen, Juho Ollila
 
-VERSION = 1.1
+VERSION = 1.2
 
 '''
 Versiosta 0.6 eteenpäin, kaikki käyttämämme luokat sijaitsevat game_modules -kansiossa omissa moduuleissaan

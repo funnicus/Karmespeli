@@ -18,7 +18,6 @@ class Menu:
     #Äänet
     pygame.mixer.init()
 
-
     class Difficulties(Enum):
         Easy = 0
         Normal = 1
@@ -348,7 +347,7 @@ class Game:
             # Onko peli pysäytetty?
             if not self.pause and not self.game_over:
                 # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
-                self.clock.tick(10)
+                self.clock.tick(8)
                 self.display_screen.fill((10, 10, 10))
                 self.drawGrid()
                 self.apple.drawApple()
