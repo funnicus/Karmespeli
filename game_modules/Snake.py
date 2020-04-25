@@ -36,7 +36,7 @@ class Snake(pygame.sprite.Sprite):
                     [(int(self.gridWidth/2)-1, int(self.gridHeight/2)), "Left"],
                     [(int(self.gridWidth/2)-2, int(self.gridHeight/2)), "Left"],
                     [(int(self.gridWidth/2)-3, int(self.gridHeight/2)), "Left"],
-                    [(int(self.gridWidth/2)-4, int(self.gridHeight/2)), "Right"]
+                    [(int(self.gridWidth/2)-4, int(self.gridHeight/2)), "Left"]
                       ]
         self.snakeHead = self.snake[0]
         self.color = color
@@ -86,6 +86,7 @@ class Snake(pygame.sprite.Sprite):
             x, y = self.snake[i][0]
             rect = pygame.Rect(x * gridSize, y * gridSize, gridSize, gridSize)
 
+            # Käännetään kuvakkeita kehon suunnan mukaan
             if self.snake[i][1] == "Up":
                 self.bodyImg = pygame.transform.rotate(self.rawBodyImg, 0)
                 self.tailImg = pygame.transform.rotate(self.rawTailImg, 0)
