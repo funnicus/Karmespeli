@@ -17,7 +17,7 @@ class Menu:
 
     #Äänet
     pygame.mixer.init()
-    click_sound = pygame.mixer.Sound('sounds/click_sound.wav')
+
 
     class Difficulties(Enum):
         Easy = 0
@@ -65,6 +65,7 @@ class Menu:
     # ac = active colour eli väri joka tulee käyttöön kun hiirellä mennään napin päälle
     def button(self, message, x, y, width, height, ic, ac, action=None, fontsize=None):
 
+        game = Game()
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
 
@@ -75,7 +76,7 @@ class Menu:
             #Tapahtuma kun hiirellä klikkaa
             if click[0] == 1 and action != None:
                 
-                pygame.mixer.Sound.play(self.click_sound)
+                pygame.mixer.Sound.play(game.click_sound)
 
                 # Päävalikon toiminnot
                 if action == "playsp":
@@ -111,7 +112,6 @@ class Menu:
                     Peli = Game(self.Difficulties.Hard, self.Gamemodes.Duel)
                     Peli.start_game(800, 600)
                 elif action == "continue":
-                    game = Game()
                     game.pause = False
         #Kun hiiri ei ole näppäimen päällä
         else:
@@ -256,7 +256,10 @@ class Game:
     pygame.mixer.init()
     bite_sound = pygame.mixer.Sound('sounds/bite_sound.wav')
     fail_sound = pygame.mixer.Sound('sounds/fail_sound.wav')
+    click_sound = pygame.mixer.Sound('sounds/click_sound.wav')
     pygame.mixer.music.load('sounds/Komiku_-_03_-_Mushrooms.mp3')
+    click_sound.set_volume(0.5)
+
 
     # Pythonissa luokan konstruktori on __init__.
     # Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
@@ -273,6 +276,7 @@ class Game:
         self.obstacles = []
         self.pause = False
         self.game_over = False
+        self.sound = True
 
     def game_loop(self):
         # Peli looppi
@@ -296,12 +300,16 @@ class Game:
                 elif event.type == KEYDOWN:
                     now = pygame.time.get_ticks()
                     now2 = pygame.time.get_ticks()
+                    #Pelin pysäyttävät näppäimet
                     if event.key == K_ESCAPE:
-                        menu = Menu()
-                        menu.main_menu()
-
+                        self.pause = not self.pause
                     if event.key == K_SPACE:
                         self.pause = not self.pause
+                    if event.key == K_p:
+                        self.pause = not self.pause
+
+                    if event.key == K_m:
+                        self.sound = not self.sound
 
                     # Cooldowneilla estetään nappien spämmäys
                     # Pelaaja 1
@@ -541,6 +549,18 @@ class Game:
                 menu = Menu()
                 menu.button("PELAA UUDELLEEN", x, y, width, height, (150, 185, 150), (150, 255, 150), restart, fontsize)
                 menu.button("PÄÄVALIKKOON", x, y+90, width, height, (150, 150, 150), (200, 200, 200), "menu", fontsize)
+
+            if not self.sound:
+                self.bite_sound.set_volume(0.0)
+                self.fail_sound.set_volume(0.0)
+                self.click_sound.set_volume(0.0)
+                pygame.mixer.music.set_volume(0.0)
+
+            if self.sound:
+                self.bite_sound.set_volume(0.8)
+                self.fail_sound.set_volume(0.5)
+                self.click_sound.set_volume(0.5)
+                pygame.mixer.music.set_volume(0.5)
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
