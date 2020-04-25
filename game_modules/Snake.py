@@ -36,7 +36,7 @@ class Snake(pygame.sprite.Sprite):
                     [(int(self.gridWidth/2)-1, int(self.gridHeight/2)), "Left"],
                     [(int(self.gridWidth/2)-2, int(self.gridHeight/2)), "Left"],
                     [(int(self.gridWidth/2)-3, int(self.gridHeight/2)), "Left"],
-                    [(int(self.gridWidth/2)-4, int(self.gridHeight/2)), "Left"]
+                    [(int(self.gridWidth/2)-4, int(self.gridHeight/2)), "Right"]
                       ]
         self.snakeHead = self.snake[0]
         self.color = color
@@ -153,7 +153,7 @@ class Snake(pygame.sprite.Sprite):
 
     def collideWithSelf(self):
         for i in range(1, len(self.snake)):
-            if self.snake[0][0] == self.snake[i]:
+            if self.snake[0][0] == self.snake[i][0]:
                 return True
         return False
 
