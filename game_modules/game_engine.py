@@ -512,12 +512,12 @@ class Game:
         # Määritellään näytön ominaisuuksia kuten resoluutio...
         self.display_screen = pygame.display.set_mode(self.screenResolution)
         self.gridSize = 20
-        self.snake = Snake(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize, (255, 0, 0))
+        self.snake = Snake(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize, "1")
         if self.gamemode.name == "Duel":
-            self.other_snake = Snake(self.windowWidth / self.gridSize, (self.windowHeight / self.gridSize)+10, (0, 0, 255))
+            self.other_snake = Snake(self.windowWidth / self.gridSize, (self.windowHeight / self.gridSize)+10, "2")
         else:
             # Jos emme pelaa duel modia, sijoitetaan p2 ulos kentältä jota se ei häiritse peliä
-            self.other_snake = Snake(self.windowWidth / self.gridSize, self.windowHeight + 10, (0, 0, 255))
+            self.other_snake = Snake(self.windowWidth / self.gridSize, self.windowHeight + 10, "2")
         self.apple = Apple(self.windowWidth / self.gridSize, self.windowHeight / self.gridSize)
 
         # ja title sekä ikoni...
