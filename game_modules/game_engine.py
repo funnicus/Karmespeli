@@ -366,6 +366,7 @@ class Game:
                     if not self.game_over:
                         self.game_over = not self.game_over
                         pygame.mixer.Sound.play(self.fail_sound)
+                        pygame.mixer.music.stop()
 
                 if self.gamemode.name == "Duel":
                     if not self.other_snake.isOnScreen(int(self.windowWidth / self.gridSize), int(self.windowHeight / self.gridSize)) or self.other_snake.collideWithSelf():
@@ -373,11 +374,13 @@ class Game:
                         if not self.game_over:
                             self.game_over = not self.game_over
                             pygame.mixer.Sound.play(self.fail_sound)
+                            pygame.mixer.music.stop()
 
                     if self.snake.collideWithOther(self.other_snake.snakeLocation()) or self.other_snake.collideWithOther(self.snake.snakeLocation()):
                         if not self.game_over:
                             self.game_over = not self.game_over
                             pygame.mixer.Sound.play(self.fail_sound)
+                            pygame.mixer.music.stop()
 
                 if self.snake.snakeLocation() == self.apple.appleLocation():
                     self.apple.newApple(self.gridSize)
@@ -400,6 +403,7 @@ class Game:
                             or self.obstacles[i].obstacleLocation() == self.other_snake.snakeLocation():
                         self.game_over = not self.game_over
                         pygame.mixer.Sound.play(self.fail_sound)
+                        pygame.mixer.music.stop()
 
             #Pause ruutu
             if self.pause:
