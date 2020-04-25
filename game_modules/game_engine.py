@@ -15,6 +15,11 @@ from game_modules.Obstacle import Obstacle
 class Menu:
     # Kun peli käynnistetään, tällä enum -luokalla tiedetään
     # mikä vaikeustaso on.
+
+    #Äänet
+    pygame.mixer.init()
+    click_sound = pygame.mixer.Sound('sounds/click_sound.wav')
+
     class Difficulties(Enum):
         Easy = 0
         Normal = 1
@@ -70,6 +75,9 @@ class Menu:
             pygame.draw.rect(self.menu_screen, ac, (x, y, width, height))
             #Tapahtuma kun hiirellä klikkaa
             if click[0] == 1 and action != None:
+                
+                pygame.mixer.Sound.play(self.click_sound)
+
                 # Päävalikon toiminnot
                 if action == "playsp":
                     self.sp_select()
