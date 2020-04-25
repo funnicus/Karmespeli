@@ -251,9 +251,9 @@ class Game:
     score1 = 0
     score2 = 0
 
-    volume = pygame.image.load('pictures/Volume icon.png')
-    volume_mute = pygame.image.load('pictures/Volume mute.png')
-    arrow_keys = pygame.image.load('pictures/Arrow Keys.png')
+    volume = pygame.image.load('pictures/Volume_icon.png')
+    volume_mute = pygame.image.load('pictures/Volume_mute.png')
+    arrow_keys = pygame.image.load('pictures/Arrow_keys.png')
     wasd_keys = pygame.image.load('pictures/WASD.png')
 
 
@@ -562,7 +562,7 @@ class Game:
                 self.fail_sound.set_volume(0.0)
                 self.click_sound.set_volume(0.0)
                 pygame.mixer.music.set_volume(0.0)
-                self.display_screen.blit(self.volume_mute, (math.floor((self.windowWidth / 1.15)), 15))
+                self.display_screen.blit(self.volume_mute, (math.floor((self.windowWidth / 1.15)), 13))
 
 
             if self.sound:
