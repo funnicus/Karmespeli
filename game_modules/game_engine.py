@@ -163,15 +163,15 @@ class Menu:
             self.menu_screen.fill((10, 10, 10))
 
             text = "Juhana Kuparinen"
-            font = pygame.font.Font('OpenSans-Regural.ttf', 50)
+            font = pygame.font.Font('OpenSans-Regular.ttf', 50)
             self.drawText(text, font, self.white, (400, 200))
 
             text = "Juho Ollila"
-            font = pygame.font.Font('OpenSans-Regural.ttf', 50)
+            font = pygame.font.Font('OpenSans-Regular.ttf', 50)
             self.drawText(text, font, self.white, (400, 300))
 
             text = "Johanna Seulu"
-            font = pygame.font.Font('OpenSans-Regural.ttf', 50)
+            font = pygame.font.Font('OpenSans-Regular.ttf', 50)
             self.drawText(text, font, self.white, (400, 400))
 
             pygame.display.update()
