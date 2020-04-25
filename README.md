@@ -1,5 +1,5 @@
 # Kärmespeli
-_Versio 1.0_
+_Versio 1.1_
 
 By: Johanna Seulu, Juhana Kuparinen, Juho Ollila
 
