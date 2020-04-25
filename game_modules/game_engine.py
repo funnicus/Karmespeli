@@ -251,6 +251,12 @@ class Game:
     score1 = 0
     score2 = 0
 
+    volume = pygame.image.load('pictures/Volume icon.png')
+    volume_mute = pygame.image.load('pictures/Volume mute.png')
+    arrow_keys = pygame.image.load('pictures/Arrow Keys.png')
+    wasd_keys = pygame.image.load('pictures/WASD.png')
+
+
     #Äänet
     pygame.mixer.init()
     bite_sound = pygame.mixer.Sound('sounds/bite_sound.wav')
@@ -365,6 +371,8 @@ class Game:
                 if self.gamemode.name == "Solo":
                     font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 20)
                     self.drawText("Pisteet: " + str(self.score1), font, (255, 255, 255), (math.floor((self.windowWidth / 2)), 20))
+
+                    self.display_screen.blit(self.arrow_keys, (10,10))
                 else:
                     # Pelaaja 1
                     font1 = pygame.font.Font('fonts/OpenSans-Regular.ttf', 20)
@@ -459,7 +467,7 @@ class Game:
                     pygame.draw.rect(self.display_screen, (150, 255, 150), (x, y, width, height))
                     # Tapahtuma kun hiirellä klikkaa
                     if click[0] == 1:
-                        pygame.mixer.Sound.play(menu.click_sound)
+                        pygame.mixer.Sound.play(self.click_sound)
                         self.pause = not self.pause
                 else:
                     pygame.draw.rect(self.display_screen, (150, 185, 150), (x, y, width, height))
@@ -475,7 +483,7 @@ class Game:
                 text = "PELI PÄÄTTYI"
                 font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 60)
                 self.drawText(text, font, (255, 255, 255), (math.floor((self.windowWidth / 2)), self.windowHeight / 3))
-                pygame.draw.rect(self.display_screen, (10, 10, 10), (math.floor(self.windowWidth / 2.6), 10, 150, 50))
+                pygame.draw.rect(self.display_screen, (10, 10, 10), (0, 0, math.floor(self.windowWidth), 75))
 
                 if self.gamemode.name == "Solo":
                     text = "Pisteet: " + str(self.score1)
@@ -554,12 +562,15 @@ class Game:
                 self.fail_sound.set_volume(0.0)
                 self.click_sound.set_volume(0.0)
                 pygame.mixer.music.set_volume(0.0)
+                self.display_screen.blit(self.volume_mute, (math.floor((self.windowWidth / 1.15)), 15))
+
 
             if self.sound:
                 self.bite_sound.set_volume(0.8)
                 self.fail_sound.set_volume(0.5)
                 self.click_sound.set_volume(0.5)
                 pygame.mixer.music.set_volume(0.5)
+                self.display_screen.blit(self.volume, (math.floor((self.windowWidth / 1.15)), 10))
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
