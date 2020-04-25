@@ -80,6 +80,8 @@ class Menu:
                     quit()
                 elif action == "credits":
                     self.credits()
+                elif action == "menu":
+                    self.main_menu()
                 # Vaikeustason valintavalikon toiminnot
                 #1 pelaaja
                 elif action == "easy":
@@ -446,22 +448,22 @@ class Game:
                     restart = "normal_duel"
                 elif self.difficulty.name == "Hard" and self.gamemode.name == "Solo":
                     fontsize = 40
-                    x = 150
+                    x = 200
                     y = 400
                     width = 400
                     height = 75
                     restart = "hard"
                 elif self.difficulty.name == "Hard" and self.gamemode.name == "Duel":
                     fontsize = 40
-                    x = 150
+                    x = 200
                     y = 400
                     width = 400
                     height = 75
                     restart = "hard_duel"
                 #Napin luonti
                 menu = Menu()
-                menu.button("PELAA UUDELLEEN", x, y, width, height, (150, 150, 150), (200, 200, 200), restart, fontsize)
-                menu.button("POISTU PELISTÄ", x, y+90, width, height, (185, 150, 150), (255, 150, 150), "quit", fontsize)
+                menu.button("PELAA UUDELLEEN", x, y, width, height, (150, 185, 150), (150, 255, 150), restart, fontsize)
+                menu.button("PÄÄVALIKKOON", x, y+90, width, height, (150, 150, 150), (200, 200, 200), "menu", fontsize)
 
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
