@@ -7,6 +7,49 @@ from game_modules.Snake import Snake
 from game_modules.Apple import Apple
 from game_modules.Obstacle import Obstacle
 
+
+"""
+Menu -luokka, jossa luodaan kaikki eri valikot ja valikkoihin liittyvät ominaisuudet peliin.
+
+Attributes
+==========
+
+menuWidth : int
+menuHeight : int
+menuResolution : tuple
+
+clock : Clock
+
+volume : surface
+volume_mute : surface
+arrow_keys : surface
+wasd_keys : surface
+esc_key : surface
+
+black : tuple
+white : tuple
+green : tuple
+light_green : tuple
+red : tuple
+light_red : tuple
+gray : tuple
+light_gray : tuple
+yellow : tuple
+light_yellow : tuple
+
+
+Methods
+=======
+
+drawText : void
+text_object : surface, rect
+button : void
+main_menu : void
+credits : void
+sp_select : void
+duel_select : void
+"""
+
 #################################
 # MENU LUOKKA
 #################################
@@ -14,9 +57,6 @@ from game_modules.Obstacle import Obstacle
 class Menu:
     # Kun peli käynnistetään, tällä enum -luokalla tiedetään
     # mikä vaikeustaso on.
-
-    #Äänet
-    pygame.mixer.init()
 
     class Difficulties(Enum):
         Easy = 0
@@ -51,8 +91,8 @@ class Menu:
     light_red = (255, 150, 150)
     gray = (150, 150, 150)
     light_gray = (200, 200, 200)
-    light_yellow = (255, 255, 102)
     yellow = (255, 255, 204)
+    light_yellow = (255, 255, 102)
 
     def __init__(self):
         self.running = True
@@ -62,10 +102,35 @@ class Menu:
         textRectangle.center = location
         self.menu_screen.blit(textSurface, textRectangle)
 
+    # Metodi palauttaa textikenttien luomiseen tarvittavat Surface ja Rect objektit
     def text_object(self, text, font, colour):
         textSurface = font.render(text, True, colour)
         return textSurface, textSurface.get_rect()
 
+    """
+    Button -metodi. Luo kaikki interaktiiviset napit kaikkiin pelin eri valikkoihin.
+    Napin luonnissa annetaan useita eri parametreja joilla määritellään napin
+    eri ominaisuudet ja toiminnot
+    
+    Attributes
+    ==========
+    
+    game : Game
+    mouse : tuple
+    click : int
+    
+    Params
+    ======
+    message : string
+    x : int
+    y : int
+    width : int
+    height : int
+    ac : tuple
+    ic : tuple
+    action : None/string
+    fontsize : None/int
+    """
 
     # ic = inactive colour eli väri joka on käytössä kun hiiri ei ole napin päällä
     # ac = active colour eli väri joka tulee käyttöön kun hiirellä mennään napin päälle
@@ -131,7 +196,11 @@ class Menu:
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 40)
             self.drawText(message, font, self.black, ((x + width/2), y + 35))
 
-    # Aloitus valikko pelille
+    """
+    Main_menu -metodi, jonka avulla luodaan päävalikko pelille, jossa on neljä eri näppäintä.
+    Ensimmäinen avaa yksinpelin tason valinnan, toinen avaa kaksinpelin tason valinnan,
+    kolmas avaa tekijät valikon ja neljäs poistuu pelistä.
+    """
     def main_menu(self):
 
         pygame.mixer.music.stop()
@@ -169,7 +238,9 @@ class Menu:
             pygame.display.update()
             self.clock.tick(15)
 
-    # Tekijä valikko
+    """
+    credits -metodi. Luo nimensä mukaan ruudun jossa näkyy pelin tekijöiden nimet
+    """
     def credits(self):
         cooldown = 5000
         last = pygame.time.get_ticks()
@@ -203,7 +274,10 @@ class Menu:
 
         self.main_menu()
 
-    # Tason valinta valikko
+    """
+    sp_select -metodi. Luo tason valinta valikon yksinpelille. Tason valinnassa voi valita kolmesta eri 
+    vaikeustasosta jotka vaihtavat pelikentän kokoa ja vaikeimmalla tasolla lisätään esteitä.
+    """
     def sp_select(self):
         pygame.init()
 
@@ -221,26 +295,28 @@ class Menu:
             self.button("HELPPO", 160, 200, 500, 75, self.green, self.light_green, "easy")
             self.button("NORMAALI", 160, 300, 500, 75, self.yellow, self.light_yellow, "normal")
             self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard")
-
+            # Näppäin ohjeet
+            # Pelaaja
             self.menu_screen.blit(self.arrow_keys, (200, 75))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
             self.drawText("Pelaaja 1", font, self.white, (255, 150))
-
+            # Äänet
             self.menu_screen.blit(self.volume, (575, 90))
             self.menu_screen.blit(self.volume_mute, (525, 92))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
             self.drawText("M", font, self.white, (575, 150))
-
+            # Pause
             self.menu_screen.blit(self.esc_key, (400, 90))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
             self.drawText("Pysäytys", font, self.white, (418, 150))
 
-
             pygame.display.update()
             self.clock.tick(15)
 
-        #self.display_screen.blit(self.volume_mute, (math.floor((self.windowWidth / 1.15)), 13))
-
+    """
+    duel_select -metodi. Luo tason valinta valikon kaksinpelille. Vaikeustasot ovat samat kuin
+    yksinpelissä, mutta kaksinpelissä lisätään toinen käärme jota toinen pelaaja ohjaa.
+    """
     def duel_select(self):
         pygame.init()
 
@@ -460,7 +536,7 @@ class Game:
 
             # Onko peli pysäytetty?
             if not self.pause and not self.game_over:
-                # Varmistetaan että peli ei mene yli 10 fps:n (kärmes kulkee valonnopeudella muuten...)
+                # Varmistetaan että peli ei mene yli 8 fps:n (kärmes kulkee valonnopeudella muuten...)
                 self.clock.tick(8)
                 self.display_screen.fill((10, 10, 10))
                 self.drawGrid()
