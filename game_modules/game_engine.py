@@ -20,11 +20,11 @@ menuResolution : tuple
 
 clock : Clock
 
-volume : surface
-volume_mute : surface
-arrow_keys : surface
-wasd_keys : surface
-esc_key : surface
+volume : Surface
+volume_mute : Surface
+arrow_keys : Surface
+wasd_keys : Surface
+esc_key : Surface
 
 black : tuple
 white : tuple
