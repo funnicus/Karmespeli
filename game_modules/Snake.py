@@ -7,7 +7,7 @@
 
     width : int
     height : int
-    color : int
+    color : string
 
     Methods
     =======
