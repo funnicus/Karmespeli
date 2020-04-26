@@ -47,6 +47,8 @@ class Obstacle:
         self.bush = pygame.transform.scale(self.bush, (20, 20))
         self.corona = pygame.transform.scale(self.corona, (20, 20))
 
+    # Luodaan uusi este. Parametrina gridSize, jonka avulla metodi tietää, minkä kokoinen
+    # este on.
     def newObstacle(self, gridSize):
         self.randomObstacle = random.randint(0, 101)
         self.x = random.randint(0, self.width-1)
@@ -54,6 +56,7 @@ class Obstacle:
         self.location = (self.x, self.y)
         self.obstacle = pygame.Rect(self.x * gridSize, self.y * gridSize, gridSize, gridSize)
 
+    # Nimensä mukaisesti piirtää ruudulle esteen
     def drawObstacle(self):
         if self.randomObstacle > 98:
             pygame.display.get_surface().blit(self.corona, self.obstacle)
@@ -62,5 +65,6 @@ class Obstacle:
         else:
             pygame.display.get_surface().blit(self.stone, self.obstacle)
 
+    # Palauttaa esteen sijainnin ruudukolla tuple muodossa
     def obstacleLocation(self):
         return self.location

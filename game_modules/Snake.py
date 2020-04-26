@@ -56,11 +56,11 @@ class Snake:
         self.gridWidth = width
         self.gridHeight = height
         self.snake = [
-                    [(int(self.gridWidth/2), int(self.gridHeight/2)), "Left"],
-                    [(int(self.gridWidth/2)-1, int(self.gridHeight/2)), "Left"],
-                    [(int(self.gridWidth/2)-2, int(self.gridHeight/2)), "Left"],
-                    [(int(self.gridWidth/2)-3, int(self.gridHeight/2)), "Left"],
-                    [(int(self.gridWidth/2)-4, int(self.gridHeight/2)), "Left"]
+                    [(int(self.gridWidth/2), int(self.gridHeight/2)), "Right"],
+                    [(int(self.gridWidth/2)-1, int(self.gridHeight/2)), "Right"],
+                    [(int(self.gridWidth/2)-2, int(self.gridHeight/2)), "Right"],
+                    [(int(self.gridWidth/2)-3, int(self.gridHeight/2)), "Right"],
+                    [(int(self.gridWidth/2)-4, int(self.gridHeight/2)), "Right"]
                       ]
         self.snakeHead = self.snake[0]
         self.color = color
@@ -130,13 +130,7 @@ class Snake:
                 pygame.display.get_surface().blit(self.bodyImg, rect)
             else:
                 pygame.display.get_surface().blit(self.tailImg, rect)
-            #pygame.draw.rect(pygame.display.get_surface(), self.color, rect, 0)
-            '''# Gradientti kärmes
-            if 255-(i*2) > 0:
-                pygame.draw.rect(pygame.display.get_surface(), (255-(i*2), 0, 0), rect, 0)
-            else:
-                pygame.draw.rect(pygame.display.get_surface(), (0, 0, 0), rect, 0)
-            '''
+
     # Metodit, joilla vaihdetaan käärmeen suuntaa.
     def moveRight(self):
         if self.direction != self.Directions.Left:
@@ -154,9 +148,11 @@ class Snake:
         if self.direction != self.Directions.Up:
             self.direction = self.Directions.Down
 
+    # Palauttaa käärmeen pään sijainnin
     def snakeLocation(self):
         return self.snake[0][0]
 
+    # Kasvattaa käärmettä
     def growSnake(self):
         x, y = self.snake[len(self.snake)-1][0]
         if self.direction != 2:
@@ -164,24 +160,29 @@ class Snake:
         else:
             self.snake.append([(x+1, y), self.snake[len(self.snake)-1][1]])
 
+    # Palauttaa totuusarvoisesti True tai False, sen mukaan onko käärme
+    # ruudulla. Parametreina ruudun pituus ja leveys.
     def isOnScreen(self, width, height):
         x, y = self.snake[0][0]
         if x >= width or y >= height or x < 0 or y < 4:
             return False
         return True
 
+    # Tarkastaa onko käärme omenan päällä ja palauttaa True tai False sen mukaan.
     def isOnApple(self, appleLocation):
         for i in range(len(self.snake)):
             if self.snake[i][0] == appleLocation:
                 return True
         return False
 
+    # Tarkastaa törmäsikö käärme itseensä ja palauttaa totuusarvon sen mukaan.
     def collideWithSelf(self):
         for i in range(1, len(self.snake)):
             if self.snake[0][0] == self.snake[i][0]:
                 return True
         return False
 
+    # Tarkastaa törmäsikö käärme toiseen käärmeeseen ja palauttaa totuusarvon sen mukaan.
     def collideWithOther(self, other):
         for i in range(0, len(self.snake)):
             if other == self.snake[i][0]:
