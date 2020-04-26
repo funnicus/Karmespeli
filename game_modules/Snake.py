@@ -17,11 +17,12 @@
     moveLeft : void
     moveUp : void
     moveDown : void
-    growSnake : snake
+    growSnake : void
     isOnScreen : boolean
     isOnApple : boolean
     collideWithSelf : boolean
     collideWithOther : boolean
+
 """
 
 import pygame

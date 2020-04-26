@@ -285,6 +285,61 @@ class Menu:
 # GAME LUOKKA
 #################################
 
+"""
+    Game -luokka, jonka avulla luomme itse peliympäristön.
+
+    Attributes
+    =========
+
+    windowWidth : int
+    windowHeight : int
+    screenResolution : tuple
+    clock : Clock
+    snake : Snake
+    other_snake : Snake
+    score1 : int
+    score2 : int
+
+    volume : Surface
+    volume_mute : Surface
+    arrow_keys : Surface
+    wasd_keys : Surface
+    
+    mouse : tuple
+    click : boolean
+    
+    bite_sound : Sound
+    fail_sound : Sound
+    click_sound : Sound
+    
+    running : boolean
+    last : int
+    last2 : int
+    cooldown : int
+    difficulty : Difficulty(enum)
+    gamemode : Gamemode(enum)
+    obstacles : Array
+    pause : boolean
+    game_over : boolean
+    sound : boolean
+
+    Params
+    ======
+
+    difficulty : Difficulty(enum)
+    gamemode : Gamemode(enum)
+
+    Methods
+    =======
+
+    gameLoop : void
+    startGame : void
+    drawGrid : void
+    drawText : void
+    text_object : Surface, Rect
+
+"""
+
 class Game:
     windowWidth = 800
     windowHeight = 600
@@ -310,12 +365,14 @@ class Game:
     pygame.mixer.music.load('sounds/Komiku_-_03_-_Mushrooms.mp3')
     click_sound.set_volume(0.5)
 
+    '''
+         Pythonissa luokan konstruktori on __init__.
+         Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
+         olioon itseensä viittaavan muuttujan nimi (Javan this -avainsana).
+         Pythonissa on tapana nimittää tätä muuttujaa nimellä self,
+         mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
+    '''
 
-    # Pythonissa luokan konstruktori on __init__.
-    # Luokan sisällä olevien funktioiden ensimmäinen argumentti on aina
-    # olioon itseensä viittaavan muuttujan nimi (Javan this -avainsana).
-    # Pythonissa on tapana nimittää tätä muuttujaa nimellä self,
-    # mutta ohjelmoija voi halutessaan käyttää myös jotain muuta nimitystä tälle.
     def __init__(self, difficulty=None, gamemode=None):
         self.running = True
         self.last = pygame.time.get_ticks()
@@ -328,6 +385,9 @@ class Game:
         self.game_over = False
         self.sound = True
 
+    """
+    game_loop -metodi. Nimensä mukaisesti tämä metodi luo pelin pääasiallisen loopin.
+    """
     def game_loop(self):
         # Peli looppi
         self.apple.newApple(self.gridSize)

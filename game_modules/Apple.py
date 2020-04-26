@@ -1,3 +1,33 @@
+"""
+    Apple -luokka, jonka avulla piirrämme omenoita peliin. Luokka pitää huolen myös
+    omenoihin liittyvistä laskutoimituksista.
+
+    Attributes
+    =========
+
+    width : int
+    height : int
+    x : int
+    y : int
+    location : coordinate
+    apple : Rect
+    img : png
+
+    Params
+    ======
+
+    width : int
+    height : int
+
+    Methods
+    =======
+
+    newApple : void
+    drawApple : void
+    appleLocation : coordinate
+
+"""
+
 import pygame
 import random
 

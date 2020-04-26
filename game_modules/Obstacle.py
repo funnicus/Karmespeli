@@ -1,3 +1,35 @@
+"""
+    Obstacle -luokka, jonka avulla piirrämme esteitä peliin. Luokka pitää huolen myös
+    esteisiin liittyvistä laskutoimituksista.
+
+    Attributes
+    =========
+
+    width : int
+    height : int
+    stone : png
+    bush : png
+    corona : png
+    x : int
+    y : int
+    location : coordinate
+    obstacle : Rect
+
+    Params
+    ======
+
+    width : int
+    height : int
+
+    Methods
+    =======
+
+    newObstacle : void
+    drawObstacle : void
+    obstacleLocation : coordinate
+
+"""
+
 import pygame
 import random
 
