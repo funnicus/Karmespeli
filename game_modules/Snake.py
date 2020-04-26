@@ -1,10 +1,33 @@
+"""
+    Snake -luokka, jonka avulla piirrämme kärmeksen peliin. Luokka pitää huolen myös
+    käärmeeseen liittyvistä laskutoimituksista.
+
+    Params
+    ======
+
+    width : int
+    height : int
+    color : int
+
+    Methods
+    =======
+
+    update : void
+    moveRight : void
+    moveLeft : void
+    moveUp : void
+    moveDown : void
+    growSnake : snake
+    isOnScreen : boolean
+    isOnApple : boolean
+    collideWithSelf : boolean
+    collideWithOther : boolean
+"""
+
 import pygame
-import math
-import random
 from enum import Enum
 
-# Snake luokka joka perii Sprite luokan
-class Snake(pygame.sprite.Sprite):
+class Snake:
 
     # Luodaan enum luokka, joka määrittelee käärmeen suunnat
     class Directions(Enum):
