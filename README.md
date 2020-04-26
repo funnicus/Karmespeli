@@ -11,7 +11,8 @@ pythonin __pygame__ -pelikirjastolla.
 
 Pelin ideana on syödä mahdollisimman paljon kentälle ilmestyviä omenoita.
 Mitä enemmän on syönyt omenoita, sitä pidemmäksi käärme kasvaa (ja peli vaikeutuu).
-Peli sisältää myös kaksintaistelu -moodin, jossa kaksi pelaajaa kilpailevat vastakkain.
+Peli sisältää myös kaksintaistelu -moodin, jossa kaksi pelaajaa 
+kilpailevat vastakkain ja enemmän pisteitä saanut voittaa.
 
 ### Controls
 
@@ -19,7 +20,7 @@ Peli sisältää myös kaksintaistelu -moodin, jossa kaksi pelaajaa kilpailevat 
 * Pelaaja 2: WASD
 * Mute : m
 * esc : quit/pause
-* space : pause
+* p, space : pause
 
 ### Todo (jos olisi jäänyt aikaa)
 

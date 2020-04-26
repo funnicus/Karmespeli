@@ -300,7 +300,7 @@ class Menu:
             self.menu_screen.blit(self.arrow_keys, (200, 75))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
             self.drawText("Pelaaja 1", font, self.white, (255, 150))
-            # Äänet
+            # Äänet, ääniefektit ladattu osoitteesta https://www.zapslat.com
             self.menu_screen.blit(self.volume, (575, 90))
             self.menu_screen.blit(self.volume_mute, (525, 92))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
