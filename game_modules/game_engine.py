@@ -35,6 +35,13 @@ class Menu:
     clock = pygame.time.Clock()
     menu_screen = pygame.display.set_mode(menuResolution)
 
+    #Määritetään kuvia
+    volume = pygame.image.load('pictures/Volume_icon.png')
+    volume_mute = pygame.image.load('pictures/Volume_mute.png')
+    arrow_keys = pygame.image.load('pictures/Arrow_keys.png')
+    wasd_keys = pygame.image.load('pictures/WASD.png')
+    esc_key = pygame.image.load('pictures/Esc_key.png')
+
     #Määritellään valmiiksi värejä RGB arvojen avulla
     black = (10, 10, 10)
     white = (255, 255, 255)
@@ -214,8 +221,25 @@ class Menu:
             self.button("HELPPO", 160, 200, 500, 75, self.green, self.light_green, "easy")
             self.button("NORMAALI", 160, 300, 500, 75, self.yellow, self.light_yellow, "normal")
             self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard")
+
+            self.menu_screen.blit(self.arrow_keys, (200, 75))
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
+            self.drawText("Pelaaja 1", font, self.white, (255, 150))
+
+            self.menu_screen.blit(self.volume, (575, 90))
+            self.menu_screen.blit(self.volume_mute, (525, 92))
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
+            self.drawText("M", font, self.white, (575, 150))
+
+            self.menu_screen.blit(self.esc_key, (400, 90))
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
+            self.drawText("Pysäytys", font, self.white, (418, 150))
+
+
             pygame.display.update()
             self.clock.tick(15)
+
+        #self.display_screen.blit(self.volume_mute, (math.floor((self.windowWidth / 1.15)), 13))
 
     def duel_select(self):
         pygame.init()
@@ -234,6 +258,25 @@ class Menu:
             self.button("HELPPO", 160, 200, 500, 75, self.green, self.light_green, "easy_duel")
             self.button("NORMAALI", 160, 300, 500, 75, self.yellow, self.light_yellow, "normal_duel")
             self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard_duel")
+            # Näppäin ohjeet
+            # Pelaaja 1
+            self.menu_screen.blit(self.arrow_keys, (100, 75))
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
+            self.drawText("Pelaaja 1:", font, self.white, (155, 150))
+            # Pelaaja 2
+            self.menu_screen.blit(self.wasd_keys, (225, 75))
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
+            self.drawText("Pelaaja 2:", font, self.white, (280, 150))
+            # Äänet
+            self.menu_screen.blit(self.volume, (625, 90))
+            self.menu_screen.blit(self.volume_mute, (575, 92))
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
+            self.drawText("M: Äänet pois/päälle", font, self.white, (625, 150))
+            # Pause
+            self.menu_screen.blit(self.esc_key, (400, 90))
+            font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
+            self.drawText("Pysäytys", font, self.white, (418, 150))
+
             pygame.display.update()
             self.clock.tick(15)
 
@@ -256,6 +299,8 @@ class Game:
     arrow_keys = pygame.image.load('pictures/Arrow_keys.png')
     wasd_keys = pygame.image.load('pictures/WASD.png')
 
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
 
     #Äänet
     pygame.mixer.init()
@@ -372,7 +417,7 @@ class Game:
                     font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 20)
                     self.drawText("Pisteet: " + str(self.score1), font, (255, 255, 255), (math.floor((self.windowWidth / 2)), 20))
 
-                    self.display_screen.blit(self.arrow_keys, (10,10))
+                    #self.display_screen.blit(self.arrow_keys, (10,10))
                 else:
                     # Pelaaja 1
                     font1 = pygame.font.Font('fonts/OpenSans-Regular.ttf', 20)
@@ -557,14 +602,14 @@ class Game:
                 menu.button("PELAA UUDELLEEN", x, y, width, height, (150, 185, 150), (150, 255, 150), restart, fontsize)
                 menu.button("PÄÄVALIKKOON", x, y+90, width, height, (150, 150, 150), (200, 200, 200), "menu", fontsize)
 
+            #Äänet pois päältä
             if not self.sound:
                 self.bite_sound.set_volume(0.0)
                 self.fail_sound.set_volume(0.0)
                 self.click_sound.set_volume(0.0)
                 pygame.mixer.music.set_volume(0.0)
                 self.display_screen.blit(self.volume_mute, (math.floor((self.windowWidth / 1.15)), 13))
-
-
+            #Äänet päälle
             if self.sound:
                 self.bite_sound.set_volume(0.8)
                 self.fail_sound.set_volume(0.5)
@@ -574,8 +619,6 @@ class Game:
 
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
-
-        print("Your score was: " + str(self.score))
 
     # Funktio jolla aloitetaan peli
     def start_game(self, width, height):
