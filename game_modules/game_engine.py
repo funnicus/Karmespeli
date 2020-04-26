@@ -260,22 +260,22 @@ class Menu:
             self.button("VAIKEA", 160, 400, 500, 75, self.red, self.light_red, "hard_duel")
             # Näppäin ohjeet
             # Pelaaja 1
-            self.menu_screen.blit(self.arrow_keys, (100, 75))
+            self.menu_screen.blit(self.arrow_keys, (100+75, 75))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
-            self.drawText("Pelaaja 1:", font, self.white, (155, 150))
+            self.drawText("Pelaaja 1:", font, self.white, (155+75, 150))
             # Pelaaja 2
-            self.menu_screen.blit(self.wasd_keys, (225, 75))
+            self.menu_screen.blit(self.wasd_keys, (225+85, 75))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
-            self.drawText("Pelaaja 2:", font, self.white, (280, 150))
+            self.drawText("Pelaaja 2:", font, self.white, (280+85, 150))
             # Äänet
-            self.menu_screen.blit(self.volume, (625, 90))
-            self.menu_screen.blit(self.volume_mute, (575, 92))
+            self.menu_screen.blit(self.volume, (550+60, 90))
+            self.menu_screen.blit(self.volume_mute, (500+60, 92))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
-            self.drawText("M: Äänet pois/päälle", font, self.white, (625, 150))
+            self.drawText("M", font, self.white, (550+60, 150))
             # Pause
-            self.menu_screen.blit(self.esc_key, (400, 90))
+            self.menu_screen.blit(self.esc_key, (400+75, 90))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
-            self.drawText("Pysäytys", font, self.white, (418, 150))
+            self.drawText("Pysäytys", font, self.white, (418+75, 150))
 
             pygame.display.update()
             self.clock.tick(15)
