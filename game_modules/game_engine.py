@@ -8,6 +8,10 @@ from game_modules.Apple import Apple
 from game_modules.Obstacle import Obstacle
 
 
+#################################
+# MENU LUOKKA
+#################################
+
 """
 Menu -luokka, jossa luodaan kaikki eri valikot ja valikkoihin liittyvät ominaisuudet peliin.
 
@@ -49,10 +53,6 @@ credits : void
 sp_select : void
 duel_select : void
 """
-
-#################################
-# MENU LUOKKA
-#################################
 
 class Menu:
     # Kun peli käynnistetään, tällä enum -luokalla tiedetään
