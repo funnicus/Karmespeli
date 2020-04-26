@@ -387,6 +387,9 @@ class Game:
 
     """
     game_loop -metodi. Nimensä mukaisesti tämä metodi luo pelin pääasiallisen loopin.
+    Loopin sisällä huolehditaan myös suurimmaksi osaksi peliin liittyvästä logiikasta.
+    Itse peli loopin siällä (while -loop) on myös ns. event loop (for loop), joka huolehtii
+    loopin aikaisista tapahtumista kuten nappien painalluksista.
     """
     def game_loop(self):
         # Peli looppi
@@ -680,7 +683,11 @@ class Game:
             # Metodia update() kutsutaan, jotta näyttö päivittyy...
             pygame.display.update()
 
-    # Funktio jolla aloitetaan peli
+    """
+    start_game -metodi toimii pelin aloittavana metodina. Se huolehtii itse peli -looppia ennen
+    tehtävien toimintojen suorittamisesta. Metodi lataa esimerkiksi ikonin peli-ikkunalle ja määrittelee
+    tälle myös dimensiot. 
+    """
     def start_game(self, width, height):
         # pygame.init() -metodia täytyy kutsua, jotta pelimoottori
         # käynnistyy.
@@ -710,7 +717,9 @@ class Game:
         # Käynnistetään itse peli...
         self.game_loop()
 
-    # drawGrid() -metodi piirtää Kärmespeliin ruudukon
+    """ 
+    drawGrid -metodi piirtää Kärmespeliin ruudukon. Ruudukkona toimii joukko Rect -objekteja.
+    """
     def drawGrid(self):
         for i in range(math.floor(self.windowWidth / (self.gridSize))):
             for j in range(4, math.floor(self.windowHeight / (self.gridSize))):
@@ -733,6 +742,7 @@ class Game:
         textRectangle.center = location
         self.display_screen.blit(textSurface, textRectangle)
 
+    # Metodi palauttaa textikenttien luomiseen tarvittavat Surface ja Rect objektit.
     def text_object(self, text, font, colour):
         textSurface = font.render(text, True, colour)
         return textSurface, textSurface.get_rect()
