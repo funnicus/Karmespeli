@@ -57,14 +57,13 @@ duel_select : void
 class Menu:
     # Kun peli käynnistetään, tällä enum -luokalla tiedetään
     # mikä vaikeustaso on.
-
     class Difficulties(Enum):
         Easy = 0
         Normal = 1
         Hard = 2
 
     # Kun peli käynnistetään, tällä enum -luokalla tiedetään
-    # mikä vaikeustaso on.
+    # mikä pelimuoto on.
     class Gamemodes(Enum):
         Solo = 1
         Duel = 2
@@ -300,7 +299,7 @@ class Menu:
             self.menu_screen.blit(self.arrow_keys, (200, 75))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
             self.drawText("Pelaaja 1", font, self.white, (255, 150))
-            # Äänet, ääniefektit ladattu osoitteesta https://www.zapslat.com
+            # Äänet
             self.menu_screen.blit(self.volume, (575, 90))
             self.menu_screen.blit(self.volume_mute, (525, 92))
             font = pygame.font.Font('fonts/OpenSans-Regular.ttf', 25)
@@ -433,7 +432,7 @@ class Game:
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
-    #Äänet
+    #Äänet, ääniefektit ladattu osoitteesta https://www.zapslat.com
     pygame.mixer.init()
     bite_sound = pygame.mixer.Sound('sounds/bite_sound.wav')
     fail_sound = pygame.mixer.Sound('sounds/fail_sound.wav')
@@ -737,7 +736,6 @@ class Game:
                     height = 75
                     restart = "hard_duel"
                 #Napin luonti
-                menu = Menu()
                 menu.button("PELAA UUDELLEEN", x, y, width, height, (150, 185, 150), (150, 255, 150), restart, fontsize)
                 menu.button("PÄÄVALIKKOON", x, y+90, width, height, (150, 150, 150), (200, 200, 200), "menu", fontsize)
 
