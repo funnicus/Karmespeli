@@ -10,6 +10,13 @@ Versiosta 0.6 eteenpäin, kaikki käyttämämme luokat sijaitsevat game_modules 
 luokat olisi hyvä tehdä omiin moduuleihinsa (eli omaan .py tiedostoon) game_modules kansiossa.
 '''
 
+"""
+main -metodilla käynnistämme pelin. Metodi luo ensin Menu -olion ja 
+luo menu ruudun olion metodilla main_menu.
+
+main -metodi tulostaa konsoliin myös pienen tervehdyksen ja pelin version.
+"""
+
 from game_modules.game_engine import Menu
 
 def main():
